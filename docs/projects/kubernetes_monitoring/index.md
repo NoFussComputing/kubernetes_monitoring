@@ -37,6 +37,12 @@ This helm chart started off with components from multiple open-source projects. 
 
 - Grafana as the visualization frontend
 
+- Service monitors
+
+    - Calico, _if Selected_
+
+        > enable calico metrics with `kubectl patch felixconfiguration default --type merge --patch '{"spec":{"prometheusMetricsEnabled": true}}'`
+
 
 ## Installation
 
