@@ -74,6 +74,21 @@ nfc_monitoring:
       tag: 'v0.11.1'
     namespace: monitoring
 
+  
+  additions:
+
+    ceph:
+
+      enabled: true
+
+      namespace: ceph
+
+      ServiceMonitor:
+
+        selector:
+          matchLabels:
+            app: rook-ceph-mgr
+
 
 loki_instance:
   image: 
