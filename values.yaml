@@ -8,6 +8,7 @@ nfc_monitoring:
 
   kubernetes:
     cluster_dns_name: cluster.local
+    networking: calico
 
 
   alert_manager:
@@ -45,7 +46,8 @@ nfc_monitoring:
 
     namespace: loki
 
-    service_name: loki
+    service_name: loki-gateway
+    service_port: 80
 
     ServiceMonitor:
       selector:

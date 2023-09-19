@@ -27,7 +27,7 @@ spec:
     type: loki
     access: proxy
     # basicAuth: true
-    url: "http://{{ .Values.nfc_monitoring.loki.service_name }}.{{ .Values.nfc_monitoring.loki.namespace }}.svc.{{ .Values.nfc_monitoring.kubernetes.cluster_dns_name }}:3100"
+    url: "http://{{ .Values.nfc_monitoring.loki.service_name }}.{{ .Values.nfc_monitoring.loki.namespace }}.svc.{{ .Values.nfc_monitoring.kubernetes.cluster_dns_name }}:{{ .Values.nfc_monitoring.loki.service_port }}"
     isDefault: false
     # user: admin
     jsonData:

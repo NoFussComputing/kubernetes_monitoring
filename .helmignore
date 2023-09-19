@@ -21,3 +21,10 @@
 .idea/
 *.tmproj
 .vscode/
+
+# git repo files
+monitoring-mixins/
+ceph-mixins/
+gitlab-ci/
+website-template/
+docs/

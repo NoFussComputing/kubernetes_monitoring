@@ -25,7 +25,7 @@ data:
 
       - name: journal
         clients:
-          - url: http://{{ .Values.nfc_monitoring.loki.service_name }}.{{ .Values.nfc_monitoring.loki.namespace }}.svc.{{ .Values.nfc_monitoring.kubernetes.cluster_dns_name }}:3100/loki/api/v1/push
+          - url: http://{{ .Values.nfc_monitoring.loki.service_name }}.{{ .Values.nfc_monitoring.loki.namespace }}.svc.{{ .Values.nfc_monitoring.kubernetes.cluster_dns_name }}:{{ .Values.nfc_monitoring.loki.service_port }}/loki/api/v1/push
         scrape_configs:
         
         - job_name: systemd-journal
@@ -202,7 +202,7 @@ data:
 
       - name: kubernetes
         clients:
-        - url: http://{{ .Values.nfc_monitoring.loki.service_name }}.{{ .Values.nfc_monitoring.loki.namespace }}.svc.{{ .Values.nfc_monitoring.kubernetes.cluster_dns_name }}:3100/loki/api/v1/push
+        - url: http://{{ .Values.nfc_monitoring.loki.service_name }}.{{ .Values.nfc_monitoring.loki.namespace }}.svc.{{ .Values.nfc_monitoring.kubernetes.cluster_dns_name }}:{{ .Values.nfc_monitoring.loki.service_port }}/loki/api/v1/push
           # basic_auth:
           #   username: YOUR_LOKI_USERNAME
           #   password: YOUR_LOKI_PASSWORD
@@ -279,3 +279,26 @@ data:
         include_exporter_metrics: true
         enable_collectors:
           - uname
+
+
+  syslog_server.yaml: |
+    # REF: https://grafana.com/docs/loki/latest/send-data/promtail/configuration/#example-syslog-config
+    server:
+      http_listen_port: 9080
+      grpc_listen_port: 0
+
+    positions:
+      filename: /tmp/syslog_server_positions.yaml
+
+    clients:
+      - url: http://{{ .Values.nfc_monitoring.loki.service_name }}.{{ .Values.nfc_monitoring.loki.namespace }}.svc.{{ .Values.nfc_monitoring.kubernetes.cluster_dns_name }}:{{ .Values.nfc_monitoring.loki.service_port }}/loki/api/v1/push
+
+    scrape_configs:
+      - job_name: syslog
+        syslog:
+          listen_address: 0.0.0.0:1514
+          labels:
+            job: "syslog"
+        relabel_configs:
+          - source_labels: ['__syslog_message_hostname']
+            target_label: 'host'
