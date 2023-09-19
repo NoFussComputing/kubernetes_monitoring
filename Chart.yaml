@@ -1,0 +1,26 @@
+apiVersion: v2
+name: nfc-monitoring
+description: |
+  This helm chart installs the required components for full stack monitoring.
+
+  The purpose of this chart is to provide all components required to monitor kubernetes within its entirety. 
+  Storage of the monitoring data is not part of this chart nor will it be included. For this reason this chart can be added and removed without loosing your monitoring data.
+
+  For this chart to function correctly the following operators are required:
+
+    - [grafana](https://grafana-operator.github.io/grafana-operator/docs/installation/helm/)
+
+    - [prometheus](https://prometheus-operator.dev/docs/user-guides/getting-started/)
+
+  Full Docs available at http://nofusscomputing.com/projects/kubernetes_monitoring.
+
+type: application
+
+
+version: 0.1.0
+
+
+appVersion: "0.1.0"
+
+
+dependencies: []

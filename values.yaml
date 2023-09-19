@@ -1,0 +1,126 @@
+---
+
+# All values within this helm chart values.yaml file are under namespace `nfc_monitoring`.
+# this provides the opportunity to include this helm chart as a dependency without
+# variable collision
+
+nfc_monitoring:
+
+  kubernetes:
+    cluster_dns_name: cluster.local
+
+
+  alert_manager:
+    image: 
+      name: quay.io/prometheus/alertmanager
+      tag: 'v0.25.0'
+    namespace: alerting
+
+
+  grafana:
+    image: 
+      name: grafana/grafana
+      tag: '10.0.5'
+    namespace: grafana
+    replicas: 1
+
+    admin_user: admin
+    admin_password: admin
+
+
+  grafana_agent:
+    image: 
+      name: grafana/agent
+      tag: 'v0.36.1'
+    namespace: monitoring
+
+
+  loki:
+    image: 
+      name: grafana/loki
+      tag: 2.7.4
+    namespace: loki
+    service_name: loki
+
+
+  kube_monitor_proxy:
+    namespace: monitoring
+
+
+  kube_rbac_proxy:
+    # This image is used as part of kube-monitor-proxy.
+    image: 
+      name: quay.io/brancz/kube-rbac-proxy
+      tag: 'v0.14.2'
+
+
+  kube_state_metrics:
+    image: 
+      name: registry.k8s.io/kube-state-metrics/kube-state-metrics
+      tag: 'v2.8.1'
+    namespace: monitoring
+
+
+  prometheus:
+    image:
+      name: prom/prometheus
+      tag: 'v2.42.0'
+    namespace: monitoring
+
+
+  prometheus_adaptor:
+    image:
+      name: registry.k8s.io/prometheus-adapter/prometheus-adapter
+      tag: 'v0.11.1'
+    namespace: monitoring
+
+
+loki_instance:
+  image: 
+    name: grafana/loki
+    tag: 2.7.4
+    # tag: 2.9.0
+  namespace: loki
+
+
+oncall_instance:
+  image: 
+    name: grafana/oncall
+    tag: v1.1.40
+
+
+# oncall:
+  
+#   # image:
+#   #   # Grafana OnCall docker image repository
+#   #   repository: grafana/oncall
+#   #   tag: v1.1.38
+#   #   pullPolicy: Always
+
+#   service:
+#     enabled: false
+#     type: LoadBalancer
+#     port: 8080
+#     annotations: {}
+
+#   engine:
+#     replicaCount: 1
+#     resources:
+#       limits:
+#         cpu: 100m
+#         memory: 128Mi
+#       requests:
+#         cpu: 100m
+#         memory: 128Mi
+
+#   celery:
+#     replicaCount: 1
+#     resources:
+#       limits:
+#         cpu: 100m
+#         memory: 128Mi
+#       requests:
+#         cpu: 100m
+#         memory: 128Mi
+#   database:
+#     type: none
