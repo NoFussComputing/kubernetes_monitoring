@@ -36,11 +36,22 @@ nfc_monitoring:
 
 
   loki:
+
+    enabled: false
+
     image: 
       name: grafana/loki
       tag: 2.7.4
+
     namespace: loki
+
     service_name: loki
+
+    ServiceMonitor:
+      selector:
+        matchLabels:
+          app.kubernetes.io/name: loki
+          app.kubernetes.io/component: logging
 
 
   kube_monitor_proxy:
