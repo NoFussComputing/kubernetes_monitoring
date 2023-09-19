@@ -1,0 +1,136 @@
+---
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  labels:
+    app.kubernetes.io/component: proxy
+    app.kubernetes.io/instance: k8s
+    app.kubernetes.io/name: kube-monitor-proxy
+    app.kubernetes.io/managed-by: {{ $.Release.Service }}
+    app.kubernetes.io/part-of: {{ $.Chart.Name }}
+    app.kubernetes.io/version: {{ $.Chart.Version }}
+
+    nodeExportermetricsJob: node
+    name_kcm: kube-controller-manager
+
+  name: kube-monitor-proxy
+  namespace: "{{ .Values.nfc_monitoring.kube_monitor_proxy.namespace }}"
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/component: proxy
+      app.kubernetes.io/instance: k8s
+      app.kubernetes.io/name: kube-monitor-proxy
+      app.kubernetes.io/managed-by: {{ $.Release.Service }}
+      app.kubernetes.io/part-of: {{ $.Chart.Name }}
+      app.kubernetes.io/version: {{ $.Chart.Version }}
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/component: proxy
+        app.kubernetes.io/instance: k8s
+        app.kubernetes.io/name: kube-monitor-proxy
+        app.kubernetes.io/managed-by: {{ $.Release.Service }}
+        app.kubernetes.io/part-of: {{ $.Chart.Name }}
+        app.kubernetes.io/version: {{ $.Chart.Version }}
+    spec:
+      automountServiceAccountToken: true
+      hostNetwork: true
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: node-role.kubernetes.io/control-plane
+                operator: Exists
+      containers:
+      
+      - args:
+        - --logtostderr
+        - --v=10
+        - --secure-listen-address=[$(IP)]:11257
+        - --tls-cipher-suites=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256,TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256,TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384,TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384,TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305,TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305
+        - --upstream=https://127.0.0.1:10257/
+        - --client-ca-file=/var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+        - --upstream-ca-file=/var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+        env:
+        - name: NODE-IP
+          valueFrom:
+            fieldRef:
+              apiVersion: v1
+              fieldPath: status.hostIP
+        - name: IP
+          valueFrom:
+            fieldRef:
+              fieldPath: status.podIP
+        image: "{{ .Values.nfc_monitoring.kube_rbac_proxy.image.name }}:{{ .Values.nfc_monitoring.kube_rbac_proxy.image.tag }}"
+        name: kube-rbac-proxy-kube-ctrl-mgr
+        ports:
+        - containerPort: 10257
+          #hostPort: 9100
+          name: kube-ctrl-mgr
+        resources:
+          limits:
+            cpu: 200m
+            memory: 256Mi
+          requests:
+            cpu: 10m
+            memory: 20Mi
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+          readOnlyRootFilesystem: true
+          runAsGroup: 65532
+          runAsNonRoot: true
+          runAsUser: 65532
+
+
+      - args:
+        - --logtostderr
+        - --v=10
+        - --secure-listen-address=[$(IP)]:11259
+        - --tls-cipher-suites=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256,TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256,TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384,TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384,TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305,TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305
+        - --upstream=https://127.0.0.1:10259/
+        - --client-ca-file=/var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+        - --upstream-ca-file=/var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+        env:
+        - name: NODE-IP
+          valueFrom:
+            fieldRef:
+              apiVersion: v1
+              fieldPath: status.hostIP
+        - name: IP
+          valueFrom:
+            fieldRef:
+              fieldPath: status.podIP
+        image: "{{ .Values.nfc_monitoring.kube_rbac_proxy.image.name }}:{{ .Values.nfc_monitoring.kube_rbac_proxy.image.tag }}"
+        name: kube-rbac-proxy-kube-scheduler
+        ports:
+        - containerPort: 10259
+          #hostPort: 9100
+          name: kube-scheduler
+        resources:
+          limits:
+            cpu: 200m
+            memory: 256Mi
+          requests:
+            cpu: 10m
+            memory: 20Mi
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+          readOnlyRootFilesystem: true
+          runAsGroup: 65532
+          runAsNonRoot: true
+          runAsUser: 65532
+      nodeSelector:
+        kubernetes.io/os: linux
+      hostPID: true
+      priorityClassName: system-cluster-critical
+      serviceAccountName: kube-monitor-proxy
+      tolerations:
+      - operator: Exists
