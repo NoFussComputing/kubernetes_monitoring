@@ -92,6 +92,7 @@ spec:
         - name: agent-data
           mountPath: "/etc/agent/data"
           readOnly: false
+      dnsPolicy: ClusterFirst
       volumes:
       - hostPath:
           path: /sys
