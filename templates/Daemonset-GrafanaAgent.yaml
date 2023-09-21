@@ -44,6 +44,7 @@ spec:
       - args:
         - --server.http.address=0.0.0.0:12345
         - --config.file=/etc/agent/agent.yaml
+        - --config.expand-env=true
         name: grafana-agent
         image: "{{ .Values.nfc_monitoring.grafana_agent.image.name }}:{{ .Values.nfc_monitoring.grafana_agent.image.tag }}"
         #imagePullPolicy: Never
