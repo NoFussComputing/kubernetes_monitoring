@@ -11,7 +11,7 @@ metadata:
     prometheus: k8s
     role: alert-rules
   name: kube-prometheus-rules
-  namespace: monitoring
+  namespace: {{ .Values.nfc_monitoring.prometheus.namespace }}
 spec:
   groups:
   - name: general.rules

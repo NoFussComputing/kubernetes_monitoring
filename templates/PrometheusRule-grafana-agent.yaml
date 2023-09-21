@@ -11,7 +11,7 @@ metadata:
     prometheus: k8s
     role: grafana-agent-promtail
   name: grafana-agent
-  namespace: monitoring
+  namespace: {{ .Values.nfc_monitoring.prometheus.namespace }}
 spec:
   groups:
   - name: grafana_agent

@@ -10,7 +10,7 @@ metadata:
     app.kubernetes.io/managed-by: {{ $.Release.Service }}
     app.kubernetes.io/version: {{ $.Chart.Version }}
   name: prometheus-k8s-config
-  namespace: monitoring
+  namespace: {{ .Values.nfc_monitoring.prometheus.namespace }}
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
@@ -18,4 +18,4 @@ roleRef:
 subjects:
 - kind: ServiceAccount
   name: prometheus-k8s
-  namespace: monitoring
+  namespace: {{ .Values.nfc_monitoring.prometheus.namespace }}

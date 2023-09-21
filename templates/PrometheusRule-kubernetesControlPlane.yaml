@@ -10,7 +10,7 @@ metadata:
     prometheus: k8s
     role: alert-rules
   name: kubernetes-monitoring-rules
-  namespace: monitoring
+  namespace: {{ .Values.nfc_monitoring.prometheus.namespace }}
 spec:
   groups:
   - name: kubernetes-apps

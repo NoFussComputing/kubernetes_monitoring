@@ -13,7 +13,7 @@ metadata:
     prometheus: k8s
     role: alert-rules
   name: ceph-rules
-  namespace: monitoring
+  namespace: {{ .Values.nfc_monitoring.prometheus.namespace }}
 spec:
   groups:
   - name: "cluster health"

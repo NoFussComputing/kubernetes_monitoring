@@ -20,7 +20,7 @@ items:
   subjects:
   - kind: ServiceAccount
     name: prometheus-k8s
-    namespace: monitoring
+    namespace: {{ .Values.nfc_monitoring.prometheus.namespace }}
 
 - apiVersion: rbac.authorization.k8s.io/v1
   kind: RoleBinding
@@ -41,7 +41,7 @@ items:
   subjects:
   - kind: ServiceAccount
     name: prometheus-k8s
-    namespace: monitoring
+    namespace: {{ .Values.nfc_monitoring.prometheus.namespace }}
 
 
 
@@ -64,7 +64,7 @@ items:
   subjects:
   - kind: ServiceAccount
     name: prometheus-k8s
-    namespace: monitoring
+    namespace: {{ .Values.nfc_monitoring.prometheus.namespace }}
 
 
 - apiVersion: rbac.authorization.k8s.io/v1
@@ -86,7 +86,7 @@ items:
   subjects:
   - kind: ServiceAccount
     name: prometheus-k8s
-    namespace: monitoring
+    namespace: {{ .Values.nfc_monitoring.prometheus.namespace }}
 
 - apiVersion: rbac.authorization.k8s.io/v1
   kind: RoleBinding
@@ -107,7 +107,7 @@ items:
   subjects:
   - kind: ServiceAccount
     name: prometheus-k8s
-    namespace: monitoring
+    namespace: {{ .Values.nfc_monitoring.prometheus.namespace }}
 
 - apiVersion: rbac.authorization.k8s.io/v1
   kind: RoleBinding
@@ -128,7 +128,7 @@ items:
   subjects:
   - kind: ServiceAccount
     name: prometheus-k8s
-    namespace: monitoring
+    namespace: {{ .Values.nfc_monitoring.prometheus.namespace }}
 
 
 
@@ -175,7 +175,7 @@ items:
   subjects:
   - kind: ServiceAccount
     name: prometheus-k8s
-    namespace: monitoring
+    namespace: {{ .Values.nfc_monitoring.prometheus.namespace }}
 - apiVersion: rbac.authorization.k8s.io/v1
   kind: RoleBinding
   metadata:
@@ -195,7 +195,7 @@ items:
   subjects:
   - kind: ServiceAccount
     name: prometheus-k8s
-    namespace: monitoring
+    namespace: {{ .Values.nfc_monitoring.prometheus.namespace }}
 - apiVersion: rbac.authorization.k8s.io/v1
   kind: RoleBinding
   metadata:
@@ -215,7 +215,7 @@ items:
   subjects:
   - kind: ServiceAccount
     name: prometheus-k8s
-    namespace: monitoring
+    namespace: {{ .Values.nfc_monitoring.prometheus.namespace }}
 - apiVersion: rbac.authorization.k8s.io/v1
   kind: RoleBinding
   metadata:
@@ -235,7 +235,7 @@ items:
   subjects:
   - kind: ServiceAccount
     name: prometheus-k8s
-    namespace: monitoring
+    namespace: {{ .Values.nfc_monitoring.prometheus.namespace }}
 
 
 
