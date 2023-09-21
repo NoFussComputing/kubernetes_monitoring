@@ -116,6 +116,66 @@ data:
             - labels:
                 level: 
 
+
+      - name: log-files
+        clients:
+        - url: http://{{ .Values.nfc_monitoring.loki.service_name }}.{{ .Values.nfc_monitoring.loki.namespace }}.svc.{{ .Values.nfc_monitoring.kubernetes.cluster_dns_name }}:{{ .Values.nfc_monitoring.loki.service_port }}/loki/api/v1/push
+        positions:
+          filename: /tmp/var-logfile.yaml
+        target_config:
+          sync_period: 10s
+        scrape_configs:
+
+        - job_name: var-logs
+          static_configs:
+            - targets: [localhost]
+              labels:
+                job_name: 'aptitude'
+                __path__: /var/log/apt/*.log
+            - targets: [localhost]
+              labels:
+                job_name: 'dpkg'
+                __path__: /var/log/dpkg.log
+            - targets: [localhost]
+              labels:
+                job_name: 'messages'
+                __path__: /var/log/messages
+            - targets: [localhost]
+              labels:
+                job_name: 'syslog'
+                __path__: /var/log/syslog
+            - targets: [localhost]
+              labels:
+                job_name: 'kernlog'
+                __path__: /var/log/kern.log
+            - targets: [localhost]
+              labels:
+                job_name: 'auth-log'
+                __path__: /var/log/auth.log
+            - targets: [localhost]
+              labels:
+                job_name: 'boot-log'
+                __path__: /var/log/boot.log
+            - targets: [localhost]
+              labels:
+                job_name: 'daemon-log'
+                __path__: /var/log/daemon.log
+            - targets: [localhost]
+              labels:
+                job_name: 'faillog-log'
+                __path__: /var/log/faillog
+            - targets: [localhost]
+              labels:
+                job_name: 'lastlog-log'
+                __path__: /var/log/lastlog
+
+          relabel_configs:
+            - target_label: hostname
+              replacement: "${HOSTNAME}"
+            - target_label: job
+              replacement: log-files
+
+
         # - job_name: varlogs
         #   static_configs:
         #     - targets: [localhost]
@@ -238,10 +298,12 @@ data:
               source_labels:
                 - __meta_kubernetes_namespace
               target_label: namespace
+            # - target_label: job
+            #   # source_labels:
+            #   #     - __meta_kubernetes_namespace
+            #   replacement: loki/ingester_grafana-agent
             - target_label: job
-              # source_labels:
-              #     - __meta_kubernetes_namespace
-              replacement: loki/ingester_grafana-agent
+              replacement: grafana-agent
             - action: replace
               source_labels:
                 - __meta_kubernetes_pod_name
