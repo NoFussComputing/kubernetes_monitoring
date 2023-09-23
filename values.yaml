@@ -107,6 +107,15 @@ nfc_monitoring:
             topologyKey: kubernetes.io/hostname
           weight: 10
 
+    storage:
+      volumeClaimTemplate:
+        spec:
+          accessModes:
+            - ReadWriteOnce
+          resources:
+            requests:
+              storage: 40Gi
+
 
   prometheus_adaptor:
 

@@ -49,6 +49,6 @@ spec:
   serviceAccountName: prometheus-k8s
   serviceMonitorNamespaceSelector: {}
   serviceMonitorSelector: {}
-
+  storage:
     {{- toYaml .Values.nfc_monitoring.prometheus.affinity | nindent 4 }}
   version: 2.42.0
