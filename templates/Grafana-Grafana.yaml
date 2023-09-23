@@ -53,6 +53,8 @@ spec:
             app.kubernetes.io/version: {{ $.Chart.Version }}
 
         spec:
+          affinity:
+            {{- toYaml .Values.nfc_monitoring.grafana.affinity | nindent 12 }}
           containers:
           - name: grafana
             image: "{{ .Values.nfc_monitoring.grafana.image.name }}:{{ .Values.nfc_monitoring.grafana.image.tag }}"

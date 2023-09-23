@@ -19,14 +19,42 @@ nfc_monitoring:
 
 
   grafana:
-    image: 
-      name: grafana/grafana
-      tag: '10.1.2' # '10.0.5'
-    namespace: grafana
-    replicas: 1
 
     admin_user: admin
     admin_password: admin
+
+    image: 
+      name: grafana/grafana
+      tag: '10.1.2' # '10.0.5'
+
+    namespace: grafana
+
+    replicas: 1
+
+    affinity: 
+      nodeAffinity:
+        preferredDuringSchedulingIgnoredDuringExecution:
+        - preference:
+            matchExpressions:
+            - key: node-role.kubernetes.io/worker
+              operator: Exists
+          weight: 100
+        - preference:
+            matchExpressions:
+            - key: node-role.kubernetes.io/storage
+              operator: DoesNotExist
+          weight: 100
+      podAntiAffinity:
+        preferredDuringSchedulingIgnoredDuringExecution:
+        - podAffinityTerm:
+            labelSelector:
+              matchExpressions:
+              - key: app.kubernetes.io/name
+                operator: In
+                values:
+                - prometheus
+            topologyKey: kubernetes.io/hostname
+          weight: 10
 
 
   grafana_agent:
