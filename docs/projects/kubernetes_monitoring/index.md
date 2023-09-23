@@ -24,6 +24,8 @@ Intentionally we have kept this helm chart to the monitoring components only. Ke
 
 This helm chart started off with components from multiple open-source projects. As such attribution is warrented, so head on over to thier projects and give them a star. Projects used to create the building blocks of this helm chart are
 
+- [ceph](https://github.com/ceph/ceph) _mixin alerts/rules_
+
 - [Kube prometheus](https://github.com/prometheus-operator/kube-prometheus)
 
 - [prometheus adaptor](https://github.com/kubernetes-sigs/prometheus-adapter)
