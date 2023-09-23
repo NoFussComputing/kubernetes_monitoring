@@ -109,12 +109,39 @@ nfc_monitoring:
 
 
   prometheus_adaptor:
+
     image:
       name: registry.k8s.io/prometheus-adapter/prometheus-adapter
       tag: 'v0.11.1'
+
     namespace: monitoring
 
-  
+    affinity: 
+      nodeAffinity:
+        preferredDuringSchedulingIgnoredDuringExecution:
+        - preference:
+            matchExpressions:
+            - key: node-role.kubernetes.io/worker
+              operator: Exists
+          weight: 100
+        - preference:
+            matchExpressions:
+            - key: node-role.kubernetes.io/storage
+              operator: DoesNotExist
+          weight: 100
+      podAntiAffinity:
+        preferredDuringSchedulingIgnoredDuringExecution:
+        - podAffinityTerm:
+            labelSelector:
+              matchExpressions:
+              - key: app.kubernetes.io/name
+                operator: In
+                values:
+                - prometheus
+            topologyKey: kubernetes.io/hostname
+          weight: 10
+
+
   additions:
 
     ceph:
