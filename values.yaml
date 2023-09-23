@@ -195,6 +195,18 @@ nfc_monitoring:
           matchLabels:
             app: rook-ceph-mgr
 
+    # Add sidcar to grafana pod to load dashboards from configMap
+    dashboard_sidecar: 
+      
+      enabled: true
+
+      image:
+        name: ghcr.io/kiwigrid/k8s-sidecar
+        tag: '1.24.5'
+
+      label_name: grafana_dashboard
+      label_value: "1"
+
 
 loki_instance:
   image: 

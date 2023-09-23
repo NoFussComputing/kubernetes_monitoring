@@ -55,6 +55,9 @@ spec:
         spec:
           affinity:
             {{- toYaml .Values.nfc_monitoring.grafana.affinity | nindent 12 }}
+          {{ if .Values.nfc_monitoring.additions.dashboard_sidecar.enabled }}
+          automountServiceAccountToken: true
+          {{ end }}
           containers:
           - name: grafana
             image: "{{ .Values.nfc_monitoring.grafana.image.name }}:{{ .Values.nfc_monitoring.grafana.image.tag }}"
@@ -95,9 +98,33 @@ spec:
               - mountPath: /etc/grafana/provisioning/plugins
                 name: plugin-config
                 readOnly: false
+              {{ if .Values.nfc_monitoring.additions.dashboard_sidecar.enabled }}
+              - mountPath: /etc/grafana/provisioning/dashboards
+                name: provisioning-config
+              - mountPath: /var/lib/grafana/dashboards
+                name: dashboards
+          
+          - image: "{{ .Values.nfc_monitoring.additions.dashboard_sidecar.image.name }}:{{ .Values.nfc_monitoring.additions.dashboard_sidecar.image.tag}}"
+            name: k8s-sidecar
+            env:
+              - name: LABEL
+                value: "{{ .Values.nfc_monitoring.additions.dashboard_sidecar.label_name }}"
+              - name: LABEL_VALUE
+                value: "{{ .Values.nfc_monitoring.additions.dashboard_sidecar.label_value }}"
+              - name: FOLDER
+                value: /var/lib/grafana/dashboards
+              - name: NAMESPACE
+                value: grafana
+              - name: RESOURCE
+                value: configmap
+            volumeMounts:
+              - mountPath: /var/lib/grafana/dashboards
+                name: dashboards
+            {{ end }}
+          securityContext:
+              fsGroup: 65534
           volumes:
-            - name: grafana-storage
-              emptyDir: {}
+            #- name: grafana-storage
             - name: plugin-config
               configMap:
                 # Provide the name of the ConfigMap you want to mount.
@@ -106,35 +133,31 @@ spec:
                 items:
                   - key: "oncall-app.yaml"
                     path: "oncall-app.yaml"
-            # - volumeClaimTemplates:
-            #   - metadata:
-            #       name: data
-            #       labels:
-            #         app.kubernetes.io/name: loki
-            #         app.kubernetes.io/component: logging
-            #         app.kubernetes.io/part-of: {{ $.Chart.Name }}
-            #         app.kubernetes.io/version: {{ $.Chart.Version }}
-            #         app.kubernetes.io/managed-by: {{ $.Release.Service }}
-            #     spec:
-            #       accessModes:
-            #         - "ReadWriteOnce"
-            #       resources:
-            #         requests:
-            #           storage: "5Gi"
+            {{ if .Values.nfc_monitoring.additions.dashboard_sidecar.enabled }}
+            - name: dashboards
+              emptyDir: {}
+            - name: provisioning-config
+              configMap:
+                name: provisioning-config
+            {{ end }}
+            - name: grafana-storage
+              ephemeral:
+                volumeClaimTemplate:
+                  metadata:
+                    annotations:
+                      pv.beta.kubernetes.io/gid: "65534"
+                    labels:
+                      app.kubernetes.io/name: grafana
+                      app.kubernetes.io/component: graphing
+                      app.kubernetes.io/part-of: {{ $.Chart.Name }}
+                      app.kubernetes.io/version: {{ $.Chart.Version }}
+                      app.kubernetes.io/managed-by: {{ $.Release.Service }}
+                  spec:
+                    accessModes:
+                      - "ReadWriteMany"
+                    resources:
+                      requests:
+                        storage: "5Gi"
           serviceAccountName: grafana
           nodeSelector:
             kubernetes.io/os: linux
-            
-  # persistentVolumeClaim:
-  #   metadata:
-  #     labels:
-  #       app.kubernetes.io/component: graphing
-  #       app.kubernetes.io/instance: k8s
-  #       app.kubernetes.io/name: grafana
-  #       app.kubernetes.io/managed-by: {{ $.Release.Service }}
-  #       app.kubernetes.io/part-of: {{ $.Chart.Name }}
-  #       app.kubernetes.io/version: {{ $.Chart.Version }}
-  #   spec:
-  #     resources:
-  #       requests:
-  #         storage: "5Gi"
