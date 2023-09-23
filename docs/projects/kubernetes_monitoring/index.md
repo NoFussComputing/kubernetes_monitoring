@@ -43,6 +43,7 @@ This helm chart started off with components from multiple open-source projects. 
 
         > enable calico metrics with `kubectl patch felixconfiguration default --type merge --patch '{"spec":{"prometheusMetricsEnabled": true}}'`
 
+- Customization of components through values.yaml. _See values.yaml for more details._
 
 ## Installation
 
