@@ -75,10 +75,37 @@ nfc_monitoring:
 
 
   prometheus:
+
     image:
       name: prom/prometheus
-      tag: 'v2.42.0'
+      tag: 'v2.47.0'
+
     namespace: monitoring
+
+    affinity: 
+      nodeAffinity:
+        preferredDuringSchedulingIgnoredDuringExecution:
+        - preference:
+            matchExpressions:
+            - key: node-role.kubernetes.io/worker
+              operator: Exists
+          weight: 100
+        - preference:
+            matchExpressions:
+            - key: node-role.kubernetes.io/storage
+              operator: DoesNotExist
+          weight: 100
+      podAntiAffinity:
+        preferredDuringSchedulingIgnoredDuringExecution:
+        - podAffinityTerm:
+            labelSelector:
+              matchExpressions:
+              - key: app.kubernetes.io/name
+                operator: In
+                values:
+                - prometheus
+            topologyKey: kubernetes.io/hostname
+          weight: 10
 
 
   prometheus_adaptor:
