@@ -14,14 +14,14 @@ nfc_monitoring:
   alert_manager:
     image: 
       name: quay.io/prometheus/alertmanager
-      tag: 'v0.25.0'
+      tag: 'v0.26.0'
     namespace: alerting
 
 
   grafana:
     image: 
       name: grafana/grafana
-      tag: '10.0.5'
+      tag: '10.1.2' # '10.0.5'
     namespace: grafana
     replicas: 1
 
