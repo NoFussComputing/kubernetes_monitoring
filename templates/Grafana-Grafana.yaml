@@ -120,7 +120,7 @@ spec:
             volumeMounts:
               - mountPath: /var/lib/grafana/dashboards
                 name: dashboards
-            {{ end }}
+          {{ end }}
           securityContext:
               fsGroup: 65534
           volumes:
@@ -141,23 +141,23 @@ spec:
                 name: provisioning-config
             {{ end }}
             - name: grafana-storage
-              ephemeral:
-                volumeClaimTemplate:
-                  metadata:
-                    annotations:
-                      pv.beta.kubernetes.io/gid: "65534"
-                    labels:
-                      app.kubernetes.io/name: grafana
-                      app.kubernetes.io/component: graphing
-                      app.kubernetes.io/part-of: {{ $.Chart.Name }}
-                      app.kubernetes.io/version: {{ $.Chart.Version }}
-                      app.kubernetes.io/managed-by: {{ $.Release.Service }}
-                  spec:
-                    accessModes:
-                      - "ReadWriteMany"
-                    resources:
-                      requests:
-                        storage: "5Gi"
+              persistentVolumeClaim:
+                claimName: grafana-pvc
           serviceAccountName: grafana
           nodeSelector:
             kubernetes.io/os: linux
+
+  persistentVolumeClaim:
+    metadata:
+      annotations:
+        pv.beta.kubernetes.io/gid: "65534"
+      labels:
+        app.kubernetes.io/name: grafana
+        app.kubernetes.io/component: graphing
+        app.kubernetes.io/part-of: {{ $.Chart.Name }}
+    spec:
+      accessModes:
+        - "ReadWriteMany"
+      resources:
+        requests:
+          storage: "5Gi"
