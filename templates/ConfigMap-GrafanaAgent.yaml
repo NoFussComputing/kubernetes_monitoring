@@ -47,6 +47,8 @@ data:
             target_label: syslog_identifier
           - target_label: "job_name"
             replacement: "journal"
+          - target_label: hostname
+            replacement: "${HOSTNAME}"
 
           pipeline_stages:
             - json:
@@ -320,6 +322,8 @@ data:
               target_label: __path__
             - target_label: "job_name"
               replacement: "kubernetes_sd"
+            - target_label: hostname
+              replacement: "${HOSTNAME}"
 
 
 
