@@ -135,6 +135,23 @@ nfc_monitoring:
             topologyKey: kubernetes.io/hostname
           weight: 10
 
+    # List of namespaces that prometheus is to monitor
+    # used to create Roles and RoleBindings
+    monitor_namespaces:
+      - alerting
+      - default
+      # - ceph
+      - grafana
+      - monitoring
+      # - kube-dashboard
+      # - kube-metrics
+      - kube-policy
+      - kube-system
+      - logging
+      # - mariadb
+      # - olm
+      # - operators
+
     storage:
       volumeClaimTemplate:
         spec:
