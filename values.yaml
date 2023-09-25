@@ -72,8 +72,9 @@ nfc_monitoring:
       name: grafana/loki
       tag: 2.7.4
 
-    namespace: loki
+    namespace: logging
 
+    # service name and port are used for the connection to your loki instance
     service_name: loki-gateway
     service_port: 80
 
@@ -152,6 +153,11 @@ nfc_monitoring:
       # - olm
       # - operators
 
+    # Deploy a generate policy for kyverno to create Role and RoleBindings
+    # for the prometheus service account so it can monitor
+    # new/existing namespaces
+    kyverno_role_policy: true
+
     storage:
       volumeClaimTemplate:
         spec:
@@ -212,7 +218,7 @@ nfc_monitoring:
           matchLabels:
             app: rook-ceph-mgr
 
-    # Add sidcar to grafana pod to load dashboards from configMap
+    # Add sidecar to grafana pod to load dashboards from configMap
     dashboard_sidecar: 
       
       enabled: true
