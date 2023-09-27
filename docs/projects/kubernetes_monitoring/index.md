@@ -18,7 +18,7 @@ What this chart is:
 
 - Ready for logging long term storag integration, in particular Loki
 
-- Ready for metrics long term storage integration, **Still to be developed, see [GL-#1](https://gitlab.com/nofusscomputing/projects/kubernetes_monitoring/-/issues/1)**
+- Ready for metrics long term storage integration
 
 What this chart is not:
 
@@ -69,7 +69,7 @@ This helm chart started off with components from multiple open-source projects. 
 
     - Kubernetes
 
-    - loki _Loki [helm chart](https://artifacthub.io/packages/helm/grafana/loki) included, see [loki repo](https://github.com/grafana/loki/tree/f4ab1e3e89ac66e1848764dc17826abde929fdc5/production/loki-mixin-compiled) for dashboards_
+    - Loki [helm chart](https://artifacthub.io/packages/helm/grafana/loki) included dashboards, see [loki repo](https://github.com/grafana/loki/tree/f4ab1e3e89ac66e1848764dc17826abde929fdc5/production/loki-mixin-compiled) for dashboards_
 
     - Node-Exporter
 
@@ -77,7 +77,9 @@ This helm chart started off with components from multiple open-source projects. 
 
     - Promtail
 
-- Prometheus as the metrics collector
+- Prometheus
+
+    - Thanos sidecar _Optional_
 
 - Service monitors
 
@@ -111,6 +113,8 @@ This helm chart started off with components from multiple open-source projects. 
 
     - Prometheus-Adaptor
 
+    - Thanos
+
 - kyverno policies _(optional, set in values.yaml)_
 
     - auto deploy policy for prometheus role and rolebinding to access other namespaces
@@ -135,6 +139,50 @@ git clone -b development https://gitlab.com/nofusscomputing/projects/kubernetes_
 helm upgrade -i nfc_monitoring kubernetes_monitoring/
 
 ```
+
+## Metrics Storage
+
+There are two different ways that this chart porvides to route your metrics to long-term storage.
+
+- Prometheus `remote_write`
+
+- Thanos Side Car container
+
+
+### Prometheus Remote Write
+
+Using this method will have prometheus pushing it's metrics to another service to store its metrics. This option for example could be used to push metrics to Grafana Mimir. To configure add the following to the values.yaml file at path `nfc_monitoring.prometheus.additional`:
+
+``` yaml
+
+remoteWrite: 
+  - name: mimir
+    url: http://mimir-gateway.metrics.svc.cluster.local/api/v1/push
+
+```
+
+Ensure that you set the url to the correct url.
+
+
+### Thanos Side Car
+
+This method will have a Thanos container deployed within the prometheus pod. This container will then read and upload the Prometheus containers tsdb to the configured storage. To configure add the following to the values.yaml
+
+- `monitoring.thanos.sidecar.enabled` set to bool `true`
+
+- `nfc_monitoring.thanos.sidecar.config` updated to include the sidecar config.
+
+    For example to configure the Thanos sideCar to upload Prometheus metrics to S3 storage use (updating values to suit your environment):
+
+    ``` yaml
+    type: S3
+    config:
+      bucket: "thanos-metrics"
+      endpoint: "rook-ceph-rgw-earth.ceph.svc:80"
+      access_key: "7J5NM2MNCDB4T4Y9OKJ5"
+      secret_key: "t9r69RzZdWEBL3NCKiUIpDk6j5625xc6HucusiGG"
+    ```
+
 
 
 ## Template Values

@@ -51,4 +51,14 @@ spec:
   serviceMonitorSelector: {}
   storage:
     {{- toYaml .Values.nfc_monitoring.prometheus.affinity | nindent 4 }}
+  {{ if .Values.nfc_monitoring.thanos.sidecar.enabled }}
+  thanos:
+    image: "{{ .Values.nfc_monitoring.thanos.image.name }}:{{ .Values.nfc_monitoring.thanos.image.tag }}"
+    objectStorageConfig:
+      key: thanos.yaml
+      name: thanos-sidecar-config
+  {{ end }}
   version: 2.42.0
+  {{ if .Values.nfc_monitoring.prometheus.additional }}
+  {{ toYaml .Values.nfc_monitoring.prometheus.additional | nindent 2 }}
+  {{ end }}

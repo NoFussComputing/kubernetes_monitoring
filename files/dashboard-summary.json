@@ -18,7 +18,7 @@
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 0,
-  "id": 27,
+  "id": 66,
   "links": [],
   "liveNow": false,
   "panels": [
@@ -36,7 +36,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "77e897ec-8a32-4b71-9439-8f12ec42e920"
+        "uid": "${PROMETHEUS}"
       },
       "description": "Total cluster CPU Cores not being utilised",
       "fieldConfig": {
@@ -87,7 +87,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "77e897ec-8a32-4b71-9439-8f12ec42e920"
+            "uid": "${PROMETHEUS}"
           },
           "editorMode": "code",
           "exemplar": false,
@@ -105,7 +105,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "77e897ec-8a32-4b71-9439-8f12ec42e920"
+        "uid": "${PROMETHEUS}"
       },
       "description": "Total cluster CPU Cores",
       "fieldConfig": {
@@ -156,7 +156,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "77e897ec-8a32-4b71-9439-8f12ec42e920"
+            "uid": "${PROMETHEUS}"
           },
           "editorMode": "code",
           "exemplar": false,
@@ -174,7 +174,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "77e897ec-8a32-4b71-9439-8f12ec42e920"
+        "uid": "${PROMETHEUS}"
       },
       "description": "Total memory for complete cluster",
       "fieldConfig": {
@@ -251,7 +251,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "77e897ec-8a32-4b71-9439-8f12ec42e920"
+            "uid": "${PROMETHEUS}"
           },
           "disableTextWrap": false,
           "editorMode": "code",
@@ -272,7 +272,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "77e897ec-8a32-4b71-9439-8f12ec42e920"
+        "uid": "${PROMETHEUS}"
       },
       "description": "Total cluster CPU Cores not being utilised",
       "fieldConfig": {
@@ -352,7 +352,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "77e897ec-8a32-4b71-9439-8f12ec42e920"
+            "uid": "${PROMETHEUS}"
           },
           "editorMode": "code",
           "exemplar": false,
@@ -370,7 +370,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "77e897ec-8a32-4b71-9439-8f12ec42e920"
+        "uid": "${PROMETHEUS}"
       },
       "description": "Total memory for complete cluster",
       "fieldConfig": {
@@ -418,7 +418,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "77e897ec-8a32-4b71-9439-8f12ec42e920"
+            "uid": "${PROMETHEUS}"
           },
           "disableTextWrap": false,
           "editorMode": "code",
@@ -435,7 +435,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "77e897ec-8a32-4b71-9439-8f12ec42e920"
+            "uid": "${PROMETHEUS}"
           },
           "editorMode": "code",
           "expr": "sum(node_memory_Cached_bytes{node!=\"\"})",
@@ -452,7 +452,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "77e897ec-8a32-4b71-9439-8f12ec42e920"
+        "uid": "${PROMETHEUS}"
       },
       "description": "Total memory for complete cluster",
       "fieldConfig": {
@@ -500,7 +500,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "77e897ec-8a32-4b71-9439-8f12ec42e920"
+            "uid": "${PROMETHEUS}"
           },
           "disableTextWrap": false,
           "editorMode": "code",
@@ -534,7 +534,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "77e897ec-8a32-4b71-9439-8f12ec42e920"
+        "uid": "${PROMETHEUS}"
       },
       "description": "",
       "fieldConfig": {
@@ -617,7 +617,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "77e897ec-8a32-4b71-9439-8f12ec42e920"
+            "uid": "${PROMETHEUS}"
           },
           "editorMode": "code",
           "expr": "ceph_health_status{}",
@@ -646,7 +646,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "77e897ec-8a32-4b71-9439-8f12ec42e920"
+        "uid": "${PROMETHEUS}"
       },
       "description": "How many logs per minute are being received.",
       "fieldConfig": {
@@ -694,7 +694,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "77e897ec-8a32-4b71-9439-8f12ec42e920"
+            "uid": "${PROMETHEUS}"
           },
           "disableTextWrap": false,
           "editorMode": "builder",
@@ -716,7 +716,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "77e897ec-8a32-4b71-9439-8f12ec42e920"
+        "uid": "${PROMETHEUS}"
       },
       "description": "How many logs received in last 24 hours.",
       "fieldConfig": {
@@ -765,7 +765,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "77e897ec-8a32-4b71-9439-8f12ec42e920"
+            "uid": "${PROMETHEUS}"
           },
           "disableTextWrap": false,
           "editorMode": "code",
@@ -787,7 +787,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "77e897ec-8a32-4b71-9439-8f12ec42e920"
+        "uid": "${PROMETHEUS}"
       },
       "description": "How many logs per minute are being received.",
       "fieldConfig": {
@@ -836,7 +836,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "77e897ec-8a32-4b71-9439-8f12ec42e920"
+            "uid": "${PROMETHEUS}"
           },
           "disableTextWrap": false,
           "editorMode": "code",
@@ -858,7 +858,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "77e897ec-8a32-4b71-9439-8f12ec42e920"
+        "uid": "${PROMETHEUS}"
       },
       "description": "How many metrics per minute are being received.",
       "fieldConfig": {
@@ -906,7 +906,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "77e897ec-8a32-4b71-9439-8f12ec42e920"
+            "uid": "${PROMETHEUS}"
           },
           "disableTextWrap": false,
           "editorMode": "code",
@@ -928,7 +928,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "77e897ec-8a32-4b71-9439-8f12ec42e920"
+        "uid": "${PROMETHEUS}"
       },
       "description": "How many metrics in the last 24 hours",
       "fieldConfig": {
@@ -977,7 +977,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "77e897ec-8a32-4b71-9439-8f12ec42e920"
+            "uid": "${PROMETHEUS}"
           },
           "disableTextWrap": false,
           "editorMode": "code",
@@ -999,7 +999,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "77e897ec-8a32-4b71-9439-8f12ec42e920"
+        "uid": "${PROMETHEUS}"
       },
       "description": "How many metrics are stored in the database",
       "fieldConfig": {
@@ -1049,7 +1049,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "77e897ec-8a32-4b71-9439-8f12ec42e920"
+            "uid": "${PROMETHEUS}"
           },
           "disableTextWrap": false,
           "editorMode": "code",
@@ -1071,7 +1071,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "77e897ec-8a32-4b71-9439-8f12ec42e920"
+        "uid": "${PROMETHEUS}"
       },
       "description": "How many logs per minute are being received.",
       "fieldConfig": {
@@ -1150,7 +1150,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "77e897ec-8a32-4b71-9439-8f12ec42e920"
+            "uid": "${PROMETHEUS}"
           },
           "editorMode": "code",
           "expr": "sum(delta(loki_log_messages_total[1m]))",
@@ -1165,7 +1165,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "77e897ec-8a32-4b71-9439-8f12ec42e920"
+        "uid": "${PROMETHEUS}"
       },
       "description": "How many logs per minute are being received.",
       "fieldConfig": {
@@ -1244,7 +1244,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "77e897ec-8a32-4b71-9439-8f12ec42e920"
+            "uid": "${PROMETHEUS}"
           },
           "editorMode": "code",
           "expr": "sum(rate(prometheus_tsdb_head_samples_appended_total[1m]))",
@@ -1266,7 +1266,27 @@
     "Kubernetes"
   ],
   "templating": {
-    "list": []
+    "list": [
+      {
+        "current": {
+          "selected": true,
+          "text": "prometheus",
+          "value": "77e897ec-8a32-4b71-9439-8f12ec42e920"
+        },
+        "hide": 0,
+        "includeAll": false,
+        "label": "Prometheus",
+        "multi": false,
+        "name": "PROMETHEUS",
+        "options": [],
+        "query": "prometheus",
+        "queryValue": "",
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "type": "datasource"
+      }
+    ]
   },
   "time": {
     "from": "now-3h",
@@ -1276,6 +1296,6 @@
   "timezone": "",
   "title": "Cluster Overview",
   "uid": "no-fuss-computing-k8s-overview",
-  "version": 3,
+  "version": 4,
   "weekStart": ""
 }

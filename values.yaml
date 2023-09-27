@@ -56,6 +56,67 @@ nfc_monitoring:
             topologyKey: kubernetes.io/hostname
           weight: 10
 
+    # To add Grafan datasources
+    # Type: list
+    # See: https://grafana.com/docs/grafana/latest/administration/provisioning/#data-sources
+    DataSources:
+      - name: alertmanager
+        type: alertmanager
+        access: proxy
+        url: "http://alertmanager-main.{{ .Values.nfc_monitoring.alert_manager.namespace }}.svc:9093"
+        isDefault: false
+        jsonData:
+          tlsSkipVerify: true
+          timeInterval: "5s"
+          implementation: prometheus
+          handleGrafanaManagedAlerts: false
+          orgId: 1
+        editable: true
+
+      - name: loki
+        type: loki
+        access: proxy
+        url: "http://{{ .Values.nfc_monitoring.loki.service_name }}.{{ .Values.nfc_monitoring.loki.namespace }}.svc.{{ .Values.nfc_monitoring.kubernetes.cluster_dns_name }}:{{ .Values.nfc_monitoring.loki.service_port }}"
+        isDefault: false
+        jsonData:
+          orgId: 1
+        editable: true
+
+      # - name: mimir
+      #   type: prometheus
+      #   access: proxy
+      #   url: "http://mimir-gateway.metrics.svc.cluster.local/prometheus"
+      #   isDefault: false
+      #   jsonData:
+      #     manageAlerts: true
+      #     orgId: 1
+      #     prometheusType: Mimir
+      #   editable: true
+
+      - name: prometheus
+        type: prometheus
+        access: proxy
+        url: "http://prometheus-k8s.{{ .Values.nfc_monitoring.prometheus.namespace }}.svc:9090"
+        isDefault: true
+        jsonData:
+          manageAlerts: true
+          orgId: 1
+          prometheusType: Prometheus
+          prometheusVersion: 2.42.0
+        editable: true
+
+      - name: thanos
+        type: prometheus
+        access: proxy
+        url: "http://thanos-query.metrics.svc:9090"
+        isDefault: false
+        jsonData:
+          manageAlerts: true
+          orgId: 1
+          prometheusType: Thanos
+          prometheusVersion: 0.31.0
+        editable: true
+
 
   grafana_agent:
     image: 
@@ -66,7 +127,7 @@ nfc_monitoring:
 
   loki:
 
-    enabled: false
+    enabled: true
 
     image: 
       name: grafana/loki
@@ -138,6 +199,7 @@ nfc_monitoring:
 
     # List of namespaces that prometheus is to monitor
     # used to create Roles and RoleBindings
+    # type: list
     monitor_namespaces:
       - alerting
       - default
@@ -166,6 +228,15 @@ nfc_monitoring:
           resources:
             requests:
               storage: 40Gi
+
+    # Additional settings for Prometheus.
+    # See: https://prometheus-operator.dev/docs/operator/api/#monitoring.coreos.com/v1.PrometheusSpec
+    # Type: dict
+    additional: {}
+
+      # remoteWrite: 
+      #   - name: mimir
+      #     url: http://mimir-gateway.metrics.svc.cluster.local/api/v1/push
 
 
   prometheus_adaptor:
@@ -200,6 +271,26 @@ nfc_monitoring:
                 - prometheus
             topologyKey: kubernetes.io/hostname
           weight: 10
+
+  thanos:
+    image:
+      name: thanosio/thanos
+      tag: v0.32.3
+
+    # Prometheus thanos sidecar
+    # see: https://thanos.io/tip/components/sidecar.md/
+    # Type: Dict
+    sidecar:
+
+      enabled: true
+
+      config:
+        type: S3
+        config:
+          bucket: "thanos-metrics"
+          endpoint: "rook-ceph-rgw-earth.ceph.svc:80"
+          access_key: "7J5NM2MNCDB4T4Y9OKJ5"
+          secret_key: "t9r69RzZdWEBL3NCKiUIpDk6j5625xc6HucusiGG"
 
 
   additions:
