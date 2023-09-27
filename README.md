@@ -49,6 +49,10 @@ All contributions for this project must conducted from [Gitlab](https://gitlab.c
 For further details on contributing please refer to the [contribution guide](CONTRIBUTING.md).
 
 
+## Documentation
+
+Documentation for this project can be found at <http://nofusscomputing.com/projects/kubernetes_monitoring>
+
 ## Other
 
 This repo is release under this [license](LICENSE)

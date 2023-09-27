@@ -1,0 +1,39 @@
+---
+{{- if .Values.nfc_monitoring.additions.ceph.enabled | default false -}}
+
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  labels:
+    app.kubernetes.io/name: ceph
+    app.kubernetes.io/component: storage
+    app.kubernetes.io/part-of: {{ $.Chart.Name }}
+    app.kubernetes.io/version: {{ $.Chart.Version }}
+    app.kubernetes.io/managed-by: {{ $.Release.Service }}
+  name: ceph
+  namespace: "{{ .Values.nfc_monitoring.additions.ceph.namespace }}"
+spec:
+  endpoints:
+  - bearerTokenFile: /var/run/secrets/kubernetes.io/serviceaccount/token
+    interval: 15s
+    port: http-metrics
+    relabelings:
+    - action: replace
+      regex: (.*)
+      replacement: $1
+      sourceLabels:
+      - __meta_kubernetes_pod_label_app_kubernetes_io_part_of
+      targetLabel: instance
+    - sourceLabels:
+      - __metrics_path__
+      targetLabel: metrics_path
+    - targetLabel: "job"
+      replacement: "ceph"
+    scheme: http
+  targetLabels:
+    - cluster
+  selector: 
+{{ .Values.nfc_monitoring.additions.ceph.ServiceMonitor.selector | toYaml | indent 4 }}
+
+
+{{- end -}}
