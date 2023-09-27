@@ -1,0 +1,282 @@
+---
+
+# All values within this helm chart values.yaml file are under namespace `nfc_monitoring`.
+# this provides the opportunity to include this helm chart as a dependency without
+# variable collision
+
+nfc_monitoring:
+
+  kubernetes:
+    cluster_dns_name: cluster.local
+    networking: calico
+
+
+  alert_manager:
+    image: 
+      name: quay.io/prometheus/alertmanager
+      tag: 'v0.26.0'
+    namespace: alerting
+
+
+  grafana:
+
+    admin_user: admin
+    admin_password: admin
+
+    image: 
+      name: grafana/grafana
+      tag: '10.1.2' # '10.0.5'
+
+    namespace: grafana
+
+    replicas: 1
+
+    affinity: 
+      nodeAffinity:
+        preferredDuringSchedulingIgnoredDuringExecution:
+        - preference:
+            matchExpressions:
+            - key: node-role.kubernetes.io/worker
+              operator: Exists
+          weight: 100
+        - preference:
+            matchExpressions:
+            - key: node-role.kubernetes.io/storage
+              operator: DoesNotExist
+          weight: 100
+      podAntiAffinity:
+        preferredDuringSchedulingIgnoredDuringExecution:
+        - podAffinityTerm:
+            labelSelector:
+              matchExpressions:
+              - key: app.kubernetes.io/name
+                operator: In
+                values:
+                - prometheus
+            topologyKey: kubernetes.io/hostname
+          weight: 10
+
+
+  grafana_agent:
+    image: 
+      name: grafana/agent
+      tag: 'v0.36.1'
+    namespace: monitoring
+
+
+  loki:
+
+    enabled: false
+
+    image: 
+      name: grafana/loki
+      tag: 2.7.4
+
+    namespace: logging
+
+    # service name and port are used for the connection to your loki instance
+    service_name: loki-gateway
+    service_port: 80
+
+    ServiceMonitor:
+      selector:
+        matchLabels:
+          app.kubernetes.io/name: loki
+          app.kubernetes.io/component: logging
+
+
+  kube_monitor_proxy:
+    namespace: monitoring
+
+
+  kube_rbac_proxy:
+    # This image is used as part of kube-monitor-proxy.
+    image: 
+      name: quay.io/brancz/kube-rbac-proxy
+      tag: 'v0.14.2'
+
+
+  kube_state_metrics:
+    image: 
+      name: registry.k8s.io/kube-state-metrics/kube-state-metrics
+      tag: 'v2.8.1'
+    namespace: monitoring
+
+
+  prometheus:
+
+    image:
+      name: prom/prometheus
+      tag: 'v2.47.0'
+
+    namespace: monitoring
+
+    affinity: 
+      nodeAffinity:
+        preferredDuringSchedulingIgnoredDuringExecution:
+        - preference:
+            matchExpressions:
+            - key: node-role.kubernetes.io/worker
+              operator: Exists
+          weight: 100
+        - preference:
+            matchExpressions:
+            - key: node-role.kubernetes.io/storage
+              operator: DoesNotExist
+          weight: 100
+      podAntiAffinity:
+        preferredDuringSchedulingIgnoredDuringExecution:
+        - podAffinityTerm:
+            labelSelector:
+              matchExpressions:
+              - key: app.kubernetes.io/name
+                operator: In
+                values:
+                - prometheus
+            topologyKey: kubernetes.io/hostname
+          weight: 10
+
+    # List of namespaces that prometheus is to monitor
+    # used to create Roles and RoleBindings
+    monitor_namespaces:
+      - alerting
+      - default
+      # - ceph
+      - grafana
+      - monitoring
+      # - kube-dashboard
+      # - kube-metrics
+      - kube-policy
+      - kube-system
+      - logging
+      # - mariadb
+      # - olm
+      # - operators
+
+    # Deploy a generate policy for kyverno to create Role and RoleBindings
+    # for the prometheus service account so it can monitor
+    # new/existing namespaces
+    kyverno_role_policy: true
+
+    storage:
+      volumeClaimTemplate:
+        spec:
+          accessModes:
+            - ReadWriteOnce
+          resources:
+            requests:
+              storage: 40Gi
+
+
+  prometheus_adaptor:
+
+    image:
+      name: registry.k8s.io/prometheus-adapter/prometheus-adapter
+      tag: 'v0.11.1'
+
+    namespace: monitoring
+
+    affinity: 
+      nodeAffinity:
+        preferredDuringSchedulingIgnoredDuringExecution:
+        - preference:
+            matchExpressions:
+            - key: node-role.kubernetes.io/worker
+              operator: Exists
+          weight: 100
+        - preference:
+            matchExpressions:
+            - key: node-role.kubernetes.io/storage
+              operator: DoesNotExist
+          weight: 100
+      podAntiAffinity:
+        preferredDuringSchedulingIgnoredDuringExecution:
+        - podAffinityTerm:
+            labelSelector:
+              matchExpressions:
+              - key: app.kubernetes.io/name
+                operator: In
+                values:
+                - prometheus
+            topologyKey: kubernetes.io/hostname
+          weight: 10
+
+
+  additions:
+
+    ceph:
+
+      enabled: true
+
+      namespace: ceph
+
+      PrometheusRules: true
+
+      ServiceMonitor:
+
+        selector:
+          matchLabels:
+            app: rook-ceph-mgr
+
+    # Add sidecar to grafana pod to load dashboards from configMap
+    dashboard_sidecar: 
+      
+      enabled: true
+
+      image:
+        name: ghcr.io/kiwigrid/k8s-sidecar
+        tag: '1.24.5'
+
+      label_name: grafana_dashboard
+      label_value: "1"
+
+
+loki_instance:
+  image: 
+    name: grafana/loki
+    tag: 2.7.4
+    # tag: 2.9.0
+  namespace: loki
+
+
+oncall_instance:
+  image: 
+    name: grafana/oncall
+    tag: v1.1.40
+
+
+# oncall:
+  
+#   # image:
+#   #   # Grafana OnCall docker image repository
+#   #   repository: grafana/oncall
+#   #   tag: v1.1.38
+#   #   pullPolicy: Always
+
+#   service:
+#     enabled: false
+#     type: LoadBalancer
+#     port: 8080
+#     annotations: {}
+
+#   engine:
+#     replicaCount: 1
+#     resources:
+#       limits:
+#         cpu: 100m
+#         memory: 128Mi
+#       requests:
+#         cpu: 100m
+#         memory: 128Mi
+
+#   celery:
+#     replicaCount: 1
+#     resources:
+#       limits:
+#         cpu: 100m
+#         memory: 128Mi
+#       requests:
+#         cpu: 100m
+#         memory: 128Mi
+#   database:
+#     type: none

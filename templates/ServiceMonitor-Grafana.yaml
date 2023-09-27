@@ -1,0 +1,37 @@
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  labels:
+    app.kubernetes.io/component: graphing
+    app.kubernetes.io/instance: k8s
+    app.kubernetes.io/name: grafana
+    app.kubernetes.io/managed-by: {{ $.Release.Service }}
+    app.kubernetes.io/part-of: {{ $.Chart.Name }}
+    app.kubernetes.io/version: {{ $.Chart.Version }}
+  name: grafana
+  namespace: {{ .Values.nfc_monitoring.grafana.namespace }}
+spec:
+  endpoints:
+  - bearerTokenFile: /var/run/secrets/kubernetes.io/serviceaccount/token
+    interval: 15s
+    port: grafana
+    relabelings:
+    - action: replace
+      regex: (.*)
+      replacement: $1
+      sourceLabels:
+      - __meta_kubernetes_pod_label_app_kubernetes_io_instance
+      targetLabel: instance
+    scheme: http
+    # tlsConfig:
+    #   insecureSkipVerify: true
+  targetLabels:
+    - cluster
+  jobLabel: app.kubernetes.io/name
+  selector:
+    matchLabels:
+      app.kubernetes.io/component: graphing
+      app.kubernetes.io/instance: k8s
+      app.kubernetes.io/name: grafana
+      app.kubernetes.io/part-of: {{ $.Chart.Name }}
