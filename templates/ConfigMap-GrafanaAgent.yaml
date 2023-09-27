@@ -16,6 +16,8 @@ data:
     metrics:
       wal_directory: /tmp/wal
 
+
+
     logs:
       positions_directory: "/tmp"
 
@@ -254,7 +256,6 @@ data:
         netclass_ignored_devices: "^(veth.*|cali.*|[a-f0-9]{15})$"
         netdev_device_exclude: "^(veth.*|cali.*|[a-f0-9]{15})$"
 
-        scrape_integration: true
 
         include_exporter_metrics: true
         enable_collectors:
