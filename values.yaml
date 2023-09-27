@@ -66,7 +66,7 @@ nfc_monitoring:
 
   loki:
 
-    enabled: false
+    enabled: true
 
     image: 
       name: grafana/loki
@@ -200,6 +200,25 @@ nfc_monitoring:
                 - prometheus
             topologyKey: kubernetes.io/hostname
           weight: 10
+
+  thanos:
+    image:
+      name: thanosio/thanos
+      tag: v0.32.3
+
+    # Prometheus thanos sidecar
+    # see: https://thanos.io/tip/components/sidecar.md/
+    sidecar:
+
+      enabled: true
+
+      config:
+        type: S3
+        config:
+          bucket: "thanos-metrics"
+          endpoint: "rook-ceph-rgw-earth.ceph.svc:80"
+          access_key: "7J5NM2MNCDB4T4Y9OKJ5"
+          secret_key: "t9r69RzZdWEBL3NCKiUIpDk6j5625xc6HucusiGG"
 
 
   additions:

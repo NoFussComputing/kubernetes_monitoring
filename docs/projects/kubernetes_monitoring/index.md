@@ -77,7 +77,9 @@ This helm chart started off with components from multiple open-source projects. 
 
     - Promtail
 
-- Prometheus as the metrics collector
+- Prometheus
+
+    - Thanos sidecar _Optional_
 
 - Service monitors
 
