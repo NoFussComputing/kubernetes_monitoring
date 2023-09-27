@@ -93,23 +93,23 @@ nfc_monitoring:
       #     prometheusType: Mimir
       #   editable: true
 
-      - name: prometheus
-        type: prometheus
-        access: proxy
-        url: "http://prometheus-k8s.{{ .Values.nfc_monitoring.prometheus.namespace }}.svc:9090"
-        isDefault: true
-        jsonData:
-          manageAlerts: true
-          orgId: 1
-          prometheusType: Prometheus
-          prometheusVersion: 2.42.0
-        editable: true
+      # - name: prometheus
+      #   type: prometheus
+      #   access: proxy
+      #   url: "http://prometheus-k8s.{{ .Values.nfc_monitoring.prometheus.namespace }}.svc:9090"
+      #   isDefault: true
+      #   jsonData:
+      #     manageAlerts: true
+      #     orgId: 1
+      #     prometheusType: Prometheus
+      #     prometheusVersion: 2.42.0
+      #   editable: true
 
       - name: thanos
         type: prometheus
         access: proxy
         url: "http://thanos-query.metrics.svc:9090"
-        isDefault: false
+        isDefault: true
         jsonData:
           manageAlerts: true
           orgId: 1
