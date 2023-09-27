@@ -138,6 +138,50 @@ helm upgrade -i nfc_monitoring kubernetes_monitoring/
 
 ```
 
+## Metrics Storage
+
+There are two different ways that this chart porvides to route your metrics to long-term storage.
+
+- Prometheus `remote_write`
+
+- Thanos Side Car container
+
+
+### Prometheus Remote Write
+
+Using this method will have prometheus pushing it's metrics to another service to store its metrics. This option for example could be used to push metrics to Grafana Mimir. To configure add the following to the values.yaml file at path `nfc_monitoring.prometheus.additional`:
+
+``` yaml
+
+remoteWrite: 
+  - name: mimir
+    url: http://mimir-gateway.metrics.svc.cluster.local/api/v1/push
+
+```
+
+Ensure that you set the url to the correct url.
+
+
+### Thanos Side Car
+
+This method will have a Thanos container deployed within the prometheus pod. This container will then read and upload the Prometheus containers tsdb to the configured storage. To configure add the following to the values.yaml
+
+- `monitoring.thanos.sidecar.enabled` set to bool `true`
+
+- `nfc_monitoring.thanos.sidecar.config` updated to include the sidecar config.
+
+    For example to configure the Thanos sideCar to upload Prometheus metrics to S3 storage use (updating values to suit your environment):
+
+    ``` yaml
+    type: S3
+    config:
+      bucket: "thanos-metrics"
+      endpoint: "rook-ceph-rgw-earth.ceph.svc:80"
+      access_key: "7J5NM2MNCDB4T4Y9OKJ5"
+      secret_key: "t9r69RzZdWEBL3NCKiUIpDk6j5625xc6HucusiGG"
+    ```
+
+
 
 ## Template Values
 
