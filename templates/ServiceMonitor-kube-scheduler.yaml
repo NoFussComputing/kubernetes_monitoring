@@ -1,0 +1,36 @@
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  labels:
+    app.kubernetes.io/component: proxy
+    app.kubernetes.io/instance: k8s
+    app.kubernetes.io/name: kube-scheduler
+    app.kubernetes.io/managed-by: {{ $.Release.Service }}
+    app.kubernetes.io/part-of: {{ $.Chart.Name }}
+    app.kubernetes.io/version: {{ $.Chart.Version }}
+  name: kube-scheduler
+  namespace: monitoring
+spec:
+  endpoints:
+
+  - bearerTokenFile: /var/run/secrets/kubernetes.io/serviceaccount/token
+    interval: 10s
+    honorLabels: true
+    path: /metrics
+    port: kube-scheduler
+    scheme: https
+    relabelings:
+    - action: replace
+      regex: (.*)
+      replacement: $1
+      sourceLabels:
+      - __meta_kubernetes_service_label_name_ks
+      targetLabel: job
+    tlsConfig:
+      insecureSkipVerify: true
+  selector:
+    matchLabels:
+      app.kubernetes.io/instance: k8s
+      app.kubernetes.io/name: kube-monitor-proxy
+      app.kubernetes.io/part-of: {{ $.Chart.Name }}

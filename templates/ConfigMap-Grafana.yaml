@@ -1,0 +1,130 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: grafana-config
+  namespace: "{{ .Values.nfc_monitoring.grafana.namespace }}"
+  labels:
+    app.kubernetes.io/component: graphing
+    app.kubernetes.io/instance: k8s
+    app.kubernetes.io/name: grafana
+    app.kubernetes.io/managed-by: {{ $.Release.Service }}
+    app.kubernetes.io/part-of: {{ $.Chart.Name }}
+    app.kubernetes.io/version: {{ $.Chart.Version }}
+data:
+  prometheus.yaml: |-
+    {
+        "apiVersion": 1,
+        "datasources": [
+            {
+               "access":"proxy",
+                "editable": true,
+                "name": "prometheus",
+                "orgId": 1,
+                "type": "prometheus",
+                "url": "http://prometheus-config-map.monitoring.svc:9090",
+                "version": 1
+            }
+        ]
+    }
+
+  oncall-app.yaml: |-
+    apiVersion: 1
+    apps:
+    - type: grafana-oncall-app
+      name: grafana-oncall-app
+      disabled: false
+      jsonData:
+        #user: admin
+        grafanaUrl: http://grafana.monitoring.svc:3000
+        onCallApiUrl: http://oncall.monitoring.svc:8080
+      secureJsonData:
+        #password: admin
+        onCallInvitationToken: yaD3a6dkYV0CFinTlMPb42Mi9
+        #http://127.0.0.1:8080/integrations/v1/alertmanager/yaD3a6dkYV0CFinTlMPb42Mi9/
+
+
+---
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  labels:
+    app.kubernetes.io/component: graphing
+    app.kubernetes.io/instance: k8s
+    app.kubernetes.io/name: grafana
+    app.kubernetes.io/managed-by: {{ $.Release.Service }}
+    app.kubernetes.io/part-of: {{ $.Chart.Name }}
+    app.kubernetes.io/version: {{ $.Chart.Version }}
+  name: grafana-alertmanager
+  namespace: monitoring
+data:
+  alertmanager.yaml: |-
+    {
+      "template_files": {},
+      "template_file_provenances": {},
+      "alertmanager_config": {
+        "route": {
+          "receiver": "Grafana Alerting 😊",
+          "group_by": [
+            "grafana_folder",
+            "alertname"
+          ],
+          "routes": [
+            {
+              "receiver": "Grafana Alerting 😊",
+              "object_matchers": [
+                [
+                  "severity",
+                  "!=",
+                  ""
+                ],
+                [
+                  "severity",
+                  "=",
+                  "critical"
+                ],
+                [
+                  "severity",
+                  "=",
+                  "info"
+                ],
+                [
+                  "severity",
+                  "=",
+                  "warning"
+                ]
+              ],
+              "continue": true,
+              "group_wait": "1s",
+              "group_interval": "2s",
+              "repeat_interval": "15m"
+            }
+          ],
+          "group_wait": "1s",
+          "group_interval": "2s",
+          "repeat_interval": "3m"
+        },
+        "templates": null,
+        "receivers": [
+          {
+            "name": "Grafana Alerting 😊",
+            "grafana_managed_receiver_configs": [
+              {
+                "uid": "4dqvJSfVkz",
+                "name": "Grafana Alerting 😊",
+                "type": "webhook",
+                "disableResolveMessage": false,
+                "settings": {
+                  "httpMethod": "POST",
+                  "url": "http://host.docker.internal:8080/integrations/v1/grafana_alerting/dXStYoK9Z15VZW8R8AtfyIwtu/"
+                },
+                "secureFields": {}
+              }
+            ]
+          }
+        ]
+      }
+    }
+
+---

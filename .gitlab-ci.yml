@@ -1,0 +1,35 @@
+variables:
+  MY_PROJECT_ID: "50510268"
+  GIT_SYNC_URL: "https://$GITHUB_USERNAME_ROBOT:$GITHUB_TOKEN_ROBOT@github.com/NoFussComputing/kubernetes_monitoring.git"
+  
+
+  PAGES_ENVIRONMENT_PATH: projects/kubernetes_monitoring/
+
+include:
+  - project: nofusscomputing/projects/gitlab-ci
+    ref: development
+    file:
+      - template/automagic.gitlab-ci.yaml
+  #- template: Jobs/Container-Scanning.gitlab-ci.yml # see https://gitlab.com/gitlab-org/gitlab/-/issues/381665
+
+
+Website.Submodule.Deploy:
+  extends: .submodule_update_trigger
+  variables:
+    SUBMODULE_UPDATE_TRIGGER_PROJECT: nofusscomputing/infrastructure/website
+  environment:
+    url: https://nofusscomputing.com/$PAGES_ENVIRONMENT_PATH
+    name: Documentation
+  rules:
+    - if:  # condition_dev_branch_push
+        $CI_COMMIT_BRANCH == "development" && 
+        $CI_PIPELINE_SOURCE == "push"
+      exists:
+        - '{docs/**,pages/**}/*.md'
+      changes:
+        paths:
+          - '{docs/**,pages/**}/*.md'
+        compare_to: 'master'
+      when: always
+
+    - when: never

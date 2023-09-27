@@ -1,0 +1,27 @@
+---
+apiVersion: rbac.authorization.k8s.io/v1
+items:
+{{ range .Values.nfc_monitoring.prometheus.monitor_namespaces }}
+- apiVersion: rbac.authorization.k8s.io/v1
+  kind: RoleBinding
+  metadata:
+    labels:
+      app.kubernetes.io/component: prometheus
+      app.kubernetes.io/instance: k8s
+      app.kubernetes.io/name: prometheus
+      app.kubernetes.io/part-of: {{ $.Chart.Name }}
+      app.kubernetes.io/managed-by: {{ $.Release.Service }}
+      app.kubernetes.io/version: {{ $.Chart.Version }}
+    name: prometheus-k8s
+    namespace: {{ . | quote }}
+  roleRef:
+    apiGroup: rbac.authorization.k8s.io
+    kind: Role
+    name: prometheus-k8s
+  subjects:
+  - kind: ServiceAccount
+    name: prometheus-k8s
+    namespace: {{ $.Values.nfc_monitoring.prometheus.namespace }}
+{{ end }}
+
+kind: RoleBindingList
