@@ -1,0 +1,30 @@
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: grafana
+  namespace: {{ .Values.nfc_monitoring.grafana.namespace }}
+  labels:
+    app.kubernetes.io/component: graphing
+    app.kubernetes.io/instance: k8s
+    app.kubernetes.io/name: grafana
+    app.kubernetes.io/managed-by: {{ $.Release.Service }}
+    app.kubernetes.io/part-of: {{ $.Chart.Name }}
+    app.kubernetes.io/version: {{ $.Chart.Version }}
+spec:
+  selector:
+    app.kubernetes.io/component: graphing
+    app.kubernetes.io/instance: k8s
+    app.kubernetes.io/name: grafana
+    app.kubernetes.io/part-of: {{ $.Chart.Name }}
+  #type: NodePort
+  #type: LoadBalancer
+  #clusterIP: None
+  ports:
+    - name: grafana
+      port: 3000
+      targetPort: grafana-http
+      #nodePort: 3000
+  #type: LoadBalancer
+  sessionAffinity: ClientIP

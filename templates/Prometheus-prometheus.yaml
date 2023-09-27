@@ -1,0 +1,64 @@
+---
+apiVersion: monitoring.coreos.com/v1
+kind: Prometheus
+metadata:
+  labels:
+    app.kubernetes.io/component: prometheus
+    app.kubernetes.io/name: prometheus
+    app.kubernetes.io/part-of: {{ $.Chart.Name }}
+    app.kubernetes.io/managed-by: {{ $.Release.Service }}
+    app.kubernetes.io/version: {{ $.Chart.Version }}
+  name: k8s
+  namespace: "{{ .Values.nfc_monitoring.prometheus.namespace }}"
+spec:
+  affinity:
+    {{- toYaml .Values.nfc_monitoring.prometheus.affinity | nindent 4 }}
+  alerting:
+    alertmanagers:
+    - apiVersion: v2
+      name: alertmanager-main
+      namespace: "{{ .Values.nfc_monitoring.alert_manager.namespace }}"
+      port: web
+  enableFeatures: []
+  externalLabels: {}
+  image: quay.io/prometheus/prometheus:v2.42.0
+  nodeSelector:
+    kubernetes.io/os: linux
+  podMetadata:
+    labels:
+      app.kubernetes.io/component: prometheus
+      app.kubernetes.io/instance: k8s
+      app.kubernetes.io/name: prometheus
+      app.kubernetes.io/part-of: {{ $.Chart.Name }}
+      app.kubernetes.io/managed-by: {{ $.Release.Service }}
+      app.kubernetes.io/version: {{ $.Chart.Version }}
+  podMonitorNamespaceSelector: {}
+  podMonitorSelector: {}
+  probeNamespaceSelector: {}
+  probeSelector: {}
+  replicas: 3
+  resources:
+    requests:
+      memory: 400Mi
+  ruleNamespaceSelector: {}
+  ruleSelector: {}
+  securityContext:
+    fsGroup: 2000
+    runAsNonRoot: true
+    runAsUser: 1000
+  serviceAccountName: prometheus-k8s
+  serviceMonitorNamespaceSelector: {}
+  serviceMonitorSelector: {}
+  storage:
+    {{- toYaml .Values.nfc_monitoring.prometheus.affinity | nindent 4 }}
+  {{ if .Values.nfc_monitoring.thanos.sidecar.enabled }}
+  thanos:
+    image: "{{ .Values.nfc_monitoring.thanos.image.name }}:{{ .Values.nfc_monitoring.thanos.image.tag }}"
+    objectStorageConfig:
+      key: thanos.yaml
+      name: thanos-sidecar-config
+  {{ end }}
+  version: 2.42.0
+  {{ if .Values.nfc_monitoring.prometheus.additional }}
+  {{ toYaml .Values.nfc_monitoring.prometheus.additional | nindent 2 }}
+  {{ end }}

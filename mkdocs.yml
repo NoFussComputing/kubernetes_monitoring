@@ -1,0 +1,30 @@
+INHERIT: website-template/mkdocs.yml
+
+docs_dir: 'docs'
+
+repo_name: Kubernetes Monitoring Helm Chart
+repo_url: https://gitlab.com/nofusscomputing/projects/kubernetes_monitoring
+edit_uri: '/-/ide/project/nofusscomputing/projects/kubernetes_monitoring/edit/development/-/docs/'
+
+nav:
+- Home: index.md
+
+- Articles: 
+
+  - articles/index.md
+
+- Projects: 
+
+  - projects/index.md
+
+  - Kubernetes Monitoring:
+
+    - projects/kubernetes_monitoring/index.md
+
+
+- Operations: 
+
+  - operations/index.md
+
+- Contact Us: contact.md
+
