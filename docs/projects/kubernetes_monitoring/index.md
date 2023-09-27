@@ -16,6 +16,10 @@ What this chart is:
 
 - Data visualization
 
+- Ready for logging long term storag integration, in particular Loki
+
+- Ready for metrics long term storage integration, **Still to be developed, see [GL-#1](https://gitlab.com/nofusscomputing/projects/kubernetes_monitoring/-/issues/1)**
+
 What this chart is not:
 
 - A complete monitoring stack inclusive of long term storage.
@@ -33,19 +37,86 @@ This helm chart started off with components from multiple open-source projects. 
 
 ## Features
 
-- Prometheus as the metrics collector
-
-- Grafana-Agent as the daemonset for node and node-exporter metrics and also as the logging injestor for loki
+- Alert Manager
 
 - Grafana as the visualization frontend
 
+    - Dashboards
+
+        - Ceph
+        
+        - Cluster Overview
+
+        - Node Exporter Full
+
+        - Alert Manager
+    
+    - Sidecar to load dashboards from ConfigMaps _Optional_
+
+- Grafana-Agent 
+
+    - daemonset for cluster nodes for exposing metrics and an injecter to loki for node and container logs.
+
+- Loki integration for storing logs
+
+- [Mixins](https://github.com/monitoring-mixins/website) Compatible _(partial)_, Tested with:
+
+    - alert-manager
+
+    - ceph
+
+    - coreDNS
+
+    - Kubernetes
+
+    - loki _Loki [helm chart](https://artifacthub.io/packages/helm/grafana/loki) included, see [loki repo](https://github.com/grafana/loki/tree/f4ab1e3e89ac66e1848764dc17826abde929fdc5/production/loki-mixin-compiled) for dashboards_
+
+    - Node-Exporter
+
+    - Prometheus
+
+    - Promtail
+
+- Prometheus as the metrics collector
+
 - Service monitors
 
-    - Calico, _if Selected_
+    - API Server
+
+    - CAdvisor
+    
+    - Calico, _Optional_
 
         > enable calico metrics with `kubectl patch felixconfiguration default --type merge --patch '{"spec":{"prometheusMetricsEnabled": true}}'`
 
-- Customization of components through values.yaml. _See values.yaml for more details._
+    - Ceph _Optional_
+
+    - CoreDNS
+
+    - Grafana
+
+    - Kube-Controler-Manager
+
+    - Kube-Scheduler
+
+    - Kubelet
+
+    - Kube-state-metrics
+
+    - Node
+    
+    - Node-Exporter
+
+    - Prometheus
+
+    - Prometheus-Adaptor
+
+- kyverno policies _(optional, set in values.yaml)_
+
+    - auto deploy policy for prometheus role and rolebinding to access other namespaces
+
+- `values.yaml` customization of components. _See values.yaml for more details._
+
 
 ## Installation
 
