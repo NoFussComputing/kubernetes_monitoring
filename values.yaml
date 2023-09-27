@@ -232,11 +232,14 @@ nfc_monitoring:
     # Additional settings for Prometheus.
     # See: https://prometheus-operator.dev/docs/operator/api/#monitoring.coreos.com/v1.PrometheusSpec
     # Type: dict
-    additional: {}
+    additional:
 
       # remoteWrite: 
       #   - name: mimir
       #     url: http://mimir-gateway.metrics.svc.cluster.local/api/v1/push
+
+      retention: 24h
+      retentionSize: 20GB
 
 
   prometheus_adaptor:
@@ -291,6 +294,7 @@ nfc_monitoring:
           endpoint: "rook-ceph-rgw-earth.ceph.svc:80"
           access_key: "7J5NM2MNCDB4T4Y9OKJ5"
           secret_key: "t9r69RzZdWEBL3NCKiUIpDk6j5625xc6HucusiGG"
+          insecure: true
 
 
   additions:
