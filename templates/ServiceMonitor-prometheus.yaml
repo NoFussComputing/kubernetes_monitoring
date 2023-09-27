@@ -29,3 +29,34 @@ spec:
       app.kubernetes.io/instance: k8s
       app.kubernetes.io/name: prometheus
       app.kubernetes.io/part-of: {{ $.Chart.Name }}
+
+{{ if .Values.nfc_monitoring.thanos.sidecar.enabled }}
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  labels:
+    app.kubernetes.io/component: prometheus-sidecar
+    app.kubernetes.io/instance: thanos-sidecar
+    app.kubernetes.io/name: thanos-sidecar
+    app.kubernetes.io/version: v0.30.2
+  name: thanos-sidecar
+  namespace: {{ .Values.nfc_monitoring.prometheus.namespace }}
+spec:
+  endpoints:
+  - port: http
+    relabelings:
+    - action: replace
+      separator: /
+      sourceLabels:
+      - namespace
+      - pod
+      targetLabel: instance
+  selector:
+    matchLabels:
+      app.kubernetes.io/component: prometheus-sidecar
+      app.kubernetes.io/instance: k8s
+      app.kubernetes.io/name: thanos-sidecar
+      app.kubernetes.io/part-of: {{ $.Chart.Name }}
+
+{{ end }}
