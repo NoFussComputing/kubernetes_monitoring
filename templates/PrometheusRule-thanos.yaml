@@ -11,7 +11,7 @@ metadata:
     app.kubernetes.io/version: {{  $.Chart.Version }}
     prometheus: k8s
     role: alert-rules
-  name: thanos-rules
+  name: thanos-sidecar-rules
   namespace: {{  .Values.nfc_monitoring.prometheus.namespace }}
 spec:
   groups:

@@ -41,7 +41,6 @@ spec:
     requests:
       memory: 400Mi
   ruleNamespaceSelector: {}
-  ruleSelector: {}
   securityContext:
     fsGroup: 2000
     runAsNonRoot: true
