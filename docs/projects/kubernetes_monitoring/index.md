@@ -18,7 +18,7 @@ What this chart is:
 
 - Ready for logging long term storag integration, in particular Loki
 
-- Ready for metrics long term storage integration, **Still to be developed, see [GL-#1](https://gitlab.com/nofusscomputing/projects/kubernetes_monitoring/-/issues/1)**
+- Ready for metrics long term storage integration
 
 What this chart is not:
 
@@ -69,7 +69,7 @@ This helm chart started off with components from multiple open-source projects. 
 
     - Kubernetes
 
-    - loki _Loki [helm chart](https://artifacthub.io/packages/helm/grafana/loki) included, see [loki repo](https://github.com/grafana/loki/tree/f4ab1e3e89ac66e1848764dc17826abde929fdc5/production/loki-mixin-compiled) for dashboards_
+    - Loki [helm chart](https://artifacthub.io/packages/helm/grafana/loki) included dashboards, see [loki repo](https://github.com/grafana/loki/tree/f4ab1e3e89ac66e1848764dc17826abde929fdc5/production/loki-mixin-compiled) for dashboards_
 
     - Node-Exporter
 
@@ -112,6 +112,8 @@ This helm chart started off with components from multiple open-source projects. 
     - Prometheus
 
     - Prometheus-Adaptor
+
+    - Thanos
 
 - kyverno policies _(optional, set in values.yaml)_
 
