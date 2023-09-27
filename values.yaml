@@ -167,6 +167,14 @@ nfc_monitoring:
             requests:
               storage: 40Gi
 
+    # Additional settings for Prometheus.
+    # See: https://prometheus-operator.dev/docs/operator/api/#monitoring.coreos.com/v1.PrometheusSpec
+    additional: {}
+
+      # remoteWrite: 
+      #   - name: mimir
+      #     url: http://mimir-gateway.metrics.svc.cluster.local/api/v1/push
+
 
   prometheus_adaptor:
 
