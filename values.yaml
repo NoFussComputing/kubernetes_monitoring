@@ -15,6 +15,12 @@ nfc_monitoring:
     image: 
       name: quay.io/prometheus/alertmanager
       tag: 'v0.26.0'
+    
+    labels:
+      app.kubernetes.io/instance: main
+      app.kubernetes.io/component: alert-router
+      app.kubernetes.io/name: alertmanager
+
     namespace: alerting
 
 
@@ -26,6 +32,11 @@ nfc_monitoring:
     image: 
       name: grafana/grafana
       tag: '10.1.2' # '10.0.5'
+
+    labels:
+      app.kubernetes.io/component: graphing
+      app.kubernetes.io/instance: k8s
+      app.kubernetes.io/name: grafana
 
     namespace: grafana
 
@@ -122,6 +133,12 @@ nfc_monitoring:
     image: 
       name: grafana/agent
       tag: 'v0.36.1'
+
+    labels:
+      app.kubernetes.io/instance: k8s
+      app.kubernetes.io/component: exporter
+      app.kubernetes.io/name: grafana-agent
+
     namespace: monitoring
 
 
@@ -169,6 +186,12 @@ nfc_monitoring:
     image:
       name: prom/prometheus
       tag: 'v2.47.0'
+    
+    # These labels are appended to all Prometheus items and are also the selector labels
+    labels:
+      app.kubernetes.io/component: prometheus
+      app.kubernetes.io/instance: k8s
+      app.kubernetes.io/name: prometheus
 
     namespace: monitoring
 
@@ -250,6 +273,11 @@ nfc_monitoring:
     image:
       name: registry.k8s.io/prometheus-adapter/prometheus-adapter
       tag: 'v0.11.1'
+
+    labels:
+      app.kubernetes.io/component: metrics-adapter
+      app.kubernetes.io/instance: main
+      app.kubernetes.io/name: prometheus-adapter
 
     namespace: monitoring
 
