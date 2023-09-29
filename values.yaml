@@ -357,6 +357,23 @@ nfc_monitoring:
       label_value: "1"
 
 
+  network_policy:
+    
+    enabled: true
+
+    # Network Policies to apply. These policies are automagically build using the values below.
+    # 
+    # Do:
+    #   - Define 'Ingress'
+    #   - Define 'Egress'
+    #   - Ensure that the name matches the item name from values.yaml. i.e. nfc_monitoring.{item_name}
+    #     for prometheus the item name is 'prometheus'. This value is used to select items pertaining to
+    #     that item from values.yaml. for example the labels and namespace.
+    # Dont:
+    #   - Define 'podSelector' as this is alreaady included using the selector labels
+    policies:
+
+
 loki_instance:
   image: 
     name: grafana/loki
