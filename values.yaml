@@ -579,6 +579,58 @@ nfc_monitoring:
               - Egress
               - Ingress
 
+### SoF Network Policy: Grafana Agent ###
+
+      - name: grafana_agent
+        policy:
+          egress:
+
+            - to: # Logging
+                - namespaceSelector:
+                    matchLabels:
+                      kubernetes.io/metadata.name: logging
+                  podSelector:
+                    matchLabels:
+                      app.kubernetes.io/component: gateway
+                      app.kubernetes.io/instance: loki
+                      app.kubernetes.io/name: loki
+              ports:
+                - port: 80
+                  protocol: TCP
+
+            - to: # Kube DNS
+                - namespaceSelector:
+                    matchLabels:
+                      kubernetes.io/metadata.name: kube-system
+                  podSelector:
+                    matchLabels:
+                      k8s-app: kube-dns
+              ports:
+                - port: 53
+                  protocol: TCP
+                - port: 53
+                  protocol: UDP
+
+          ingress:
+
+            - from: 
+                - namespaceSelector:
+                    matchLabels:
+                      kubernetes.io/metadata.name: monitoring
+                  podSelector:
+                    matchLabels:
+                      app.kubernetes.io/component: prometheus
+                      app.kubernetes.io/instance: k8s
+                      app.kubernetes.io/name: prometheus
+              ports:
+                - port: 12345
+                  protocol: TCP
+
+          policyTypes:
+          - Egress
+          - Ingress
+
+
 
 loki_instance:
   image: 
