@@ -496,6 +496,89 @@ nfc_monitoring:
           - Egress
           - Ingress
 
+### SoF Network Policy: Grafana ###
+
+      - name: grafana
+        policy:
+            egress:
+
+              - to:
+                  - namespaceSelector:
+                      matchLabels:
+                        kubernetes.io/metadata.name: alerting
+                    podSelector:
+                      matchLabels:
+                        app.kubernetes.io/instance: main
+                        app.kubernetes.io/component: alert-router
+                        app.kubernetes.io/name: alertmanager
+                ports:
+                  - port: 9093
+                    protocol: TCP
+
+              - to:
+                  - namespaceSelector:
+                      matchLabels:
+                        kubernetes.io/metadata.name: logging
+                    podSelector:
+                      matchLabels:
+                        app.kubernetes.io/component: gateway
+                        app.kubernetes.io/instance: loki
+                        app.kubernetes.io/name: loki
+                ports:
+                  - port: 80       # Service Port
+                    protocol: TCP
+                  - port: 8080     # Pod Port
+                    protocol: TCP
+
+              - to:
+                  - namespaceSelector:
+                      matchLabels:
+                        kubernetes.io/metadata.name: monitoring
+                    podSelector:
+                      matchLabels:
+                        app.kubernetes.io/component: prometheus
+                        app.kubernetes.io/instance: k8s
+                        app.kubernetes.io/name: prometheus
+                  - namespaceSelector:
+                      matchLabels:
+                        kubernetes.io/metadata.name: metrics
+                    podSelector:
+                      matchLabels:
+                        app.kubernetes.io/component: query-layer
+                        app.kubernetes.io/instance: thanos-query
+                        app.kubernetes.io/name: thanos-query
+                ports:
+                  - port: 9090
+                    protocol: TCP
+
+              - to: [] # Requires internet access for plugins and dashboard downloading
+                ports:
+                  - port: 443
+                    protocol: TCP
+
+              - to: # Kube DNS
+                  - namespaceSelector:
+                      matchLabels:
+                        kubernetes.io/metadata.name: kube-system
+                    podSelector:
+                      matchLabels:
+                        k8s-app: kube-dns
+                ports:
+                  - port: 53
+                    protocol: TCP
+                  - port: 53
+                    protocol: UDP
+
+            ingress:
+
+              - from: []
+                ports:
+                  - port: 3000
+                    protocol: TCP
+            policyTypes:
+              - Egress
+              - Ingress
+
 
 loki_instance:
   image: 
