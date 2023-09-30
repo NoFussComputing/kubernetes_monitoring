@@ -11,13 +11,7 @@ metadata:
   namespace: "{{ .Values.nfc_monitoring.grafana.namespace }}"
 spec:
   config:
-    log:
-      mode: "console"
-    auth:
-      disable_login_form: "false"
-    security:
-      admin_user: "{{ .Values.nfc_monitoring.grafana.admin_user }}"
-      admin_password: "{{ .Values.nfc_monitoring.grafana.admin_password }}"
+    {{ toYaml $.Values.nfc_monitoring.grafana.config | nindent 4 }}
   deployment:
     metadata:
       labels:

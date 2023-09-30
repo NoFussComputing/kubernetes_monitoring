@@ -26,8 +26,26 @@ nfc_monitoring:
 
   grafana:
 
-    admin_user: admin
-    admin_password: admin
+    # Grafana Configuration
+    # Type: Dict
+    # See: https://grafana.com/docs/grafana/latest/setup-grafana/configure-grafana
+    config:
+      analytics:
+        enabled: 'false'
+      # database:
+      #   type: mysql
+      #   host: mariadb-galera.mariadb.svc:3306
+      #   name: grafana
+      #   user: root
+      #   password: admin
+
+      log:
+        mode: "console"
+      auth:
+        disable_login_form: "false"
+      security:
+        admin_user: admin
+        admin_password: admin
 
     image: 
       name: grafana/grafana
@@ -362,6 +380,7 @@ nfc_monitoring:
     enabled: true
 
     # Network Policies to apply. These policies are automagically build using the values below.
+    # What you would find under path root.spec belongs here.
     # 
     # Do:
     #   - Define 'Ingress'
