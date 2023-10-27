@@ -18,9 +18,7 @@ items:
     spec:
       instanceSelector:
         matchLabels:
-          app.kubernetes.io/component: graphing
-          app.kubernetes.io/instance: k8s
-          app.kubernetes.io/name: grafana
+          {{ toYaml $.Values.nfc_monitoring.grafana.labels | nindent 10 }}
       allowCrossNamespaceImport: true
       datasource:
         {{ toYaml . | nindent 8 }}
