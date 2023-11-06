@@ -3,8 +3,7 @@ apiVersion: monitoring.coreos.com/v1
 kind: Prometheus
 metadata:
   labels:
-    app.kubernetes.io/component: prometheus
-    app.kubernetes.io/name: prometheus
+    {{ toYaml $.Values.nfc_monitoring.prometheus.labels | nindent 4 }}
     app.kubernetes.io/part-of: {{ $.Chart.Name }}
     app.kubernetes.io/managed-by: {{ $.Release.Service }}
     app.kubernetes.io/version: {{ $.Chart.Version }}
@@ -26,9 +25,7 @@ spec:
     kubernetes.io/os: linux
   podMetadata:
     labels:
-      app.kubernetes.io/component: prometheus
-      app.kubernetes.io/instance: k8s
-      app.kubernetes.io/name: prometheus
+      {{ toYaml $.Values.nfc_monitoring.prometheus.labels | nindent 6 }}
       app.kubernetes.io/part-of: {{ $.Chart.Name }}
       app.kubernetes.io/managed-by: {{ $.Release.Service }}
       app.kubernetes.io/version: {{ $.Chart.Version }}
@@ -41,7 +38,6 @@ spec:
     requests:
       memory: 400Mi
   ruleNamespaceSelector: {}
-  ruleSelector: {}
   securityContext:
     fsGroup: 2000
     runAsNonRoot: true

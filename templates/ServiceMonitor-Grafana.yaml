@@ -3,9 +3,7 @@ apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
   labels:
-    app.kubernetes.io/component: graphing
-    app.kubernetes.io/instance: k8s
-    app.kubernetes.io/name: grafana
+    {{ toYaml $.Values.nfc_monitoring.grafana.labels | nindent 4 }}
     app.kubernetes.io/managed-by: {{ $.Release.Service }}
     app.kubernetes.io/part-of: {{ $.Chart.Name }}
     app.kubernetes.io/version: {{ $.Chart.Version }}
@@ -31,7 +29,5 @@ spec:
   jobLabel: app.kubernetes.io/name
   selector:
     matchLabels:
-      app.kubernetes.io/component: graphing
-      app.kubernetes.io/instance: k8s
-      app.kubernetes.io/name: grafana
+      {{ toYaml $.Values.nfc_monitoring.grafana.labels | nindent 6 }}
       app.kubernetes.io/part-of: {{ $.Chart.Name }}
