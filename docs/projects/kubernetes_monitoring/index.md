@@ -113,6 +113,8 @@ This helm chart started off with components from multiple open-source projects. 
 
     - Prometheus-Adaptor
 
+    - Promtail
+
     - Thanos
 
 - kyverno policies _(optional, set in values.yaml)_

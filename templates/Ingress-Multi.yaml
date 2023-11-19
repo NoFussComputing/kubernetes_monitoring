@@ -1,0 +1,41 @@
+{{ if .Values.nfc_monitoring.alert_manager.ingress.enabled | default "false" -}}
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: alertmanager
+  namespace: "{{ .Values.nfc_monitoring.alert_manager.namespace }}"
+  annotations:
+    {{ toYaml $.Values.nfc_monitoring.alert_manager.ingress.annotations | nindent 4 }}
+spec:
+  {{ toYaml $.Values.nfc_monitoring.alert_manager.ingress.spec | nindent 2 }}
+
+{{ end }}
+
+{{ if .Values.nfc_monitoring.grafana.ingress.enabled | default "false" -}}
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: grafana
+  namespace: "{{ .Values.nfc_monitoring.grafana.namespace }}"
+  annotations:
+    {{ toYaml $.Values.nfc_monitoring.grafana.ingress.annotations | nindent 4 }}
+spec:
+  {{ toYaml $.Values.nfc_monitoring.grafana.ingress.spec | nindent 2 }}
+
+{{ end }}
+
+{{ if .Values.nfc_monitoring.prometheus.ingress.enabled | default "false" -}}
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: prometheus
+  namespace: "{{ .Values.nfc_monitoring.prometheus.namespace }}"
+  annotations:
+    {{ toYaml $.Values.nfc_monitoring.prometheus.ingress.annotations | nindent 4 }}
+spec:
+  {{ toYaml $.Values.nfc_monitoring.prometheus.ingress.spec | nindent 2 }}
+
+{{ end }}
