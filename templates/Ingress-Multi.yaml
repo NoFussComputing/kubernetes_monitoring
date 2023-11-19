@@ -1,4 +1,4 @@
-{{ if .Values.nfc_monitoring.alert_manager.ingress.enabled | default "false" | bool -}}
+{{ if .Values.nfc_monitoring.alert_manager.ingress.enabled | default "false" -}}
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
@@ -12,7 +12,7 @@ spec:
 
 {{ end }}
 
-{{ if .Values.nfc_monitoring.grafana.ingress.enabled | default "false" | bool -}}
+{{ if .Values.nfc_monitoring.grafana.ingress.enabled | default "false" -}}
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
@@ -26,7 +26,7 @@ spec:
 
 {{ end }}
 
-{{ if .Values.nfc_monitoring.prometheus.ingress.enabled | default "false" | bool -}}
+{{ if .Values.nfc_monitoring.prometheus.ingress.enabled | default "false" -}}
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
