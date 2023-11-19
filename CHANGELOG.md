@@ -1,3 +1,18 @@
+## 0.2.0 (2023-11-19)
+
+### Bug Fixes
+
+- **ingress**: [11563741](https://gitlab.com/nofusscomputing/projects/kubernetes_monitoring/-/commit/11563741a90dc81ddf043cc529fa13916bee9082) - underscore removed from ingress name [ [!5](https://gitlab.com/nofusscomputing/projects/kubernetes_monitoring/-/merge_requests/5) [!3](https://gitlab.com/nofusscomputing/projects/kubernetes_monitoring/-/merge_requests/3) ]
+- **ingress**: [33883ec6](https://gitlab.com/nofusscomputing/projects/kubernetes_monitoring/-/commit/33883ec64025d8a2ab81fec50019d2605776ea07) - function bool not defined [ [!5](https://gitlab.com/nofusscomputing/projects/kubernetes_monitoring/-/merge_requests/5) [!3](https://gitlab.com/nofusscomputing/projects/kubernetes_monitoring/-/merge_requests/3) ]
+- **grafana**: [593d73e4](https://gitlab.com/nofusscomputing/projects/kubernetes_monitoring/-/commit/593d73e4c6e5c029d592adc8af5173c92d6a6fb0) - PVC access mode default to ReadWriteOnce [ [!5](https://gitlab.com/nofusscomputing/projects/kubernetes_monitoring/-/merge_requests/5) [!4](https://gitlab.com/nofusscomputing/projects/kubernetes_monitoring/-/merge_requests/4) ]
+- **prometheus**: [b6d0b18e](https://gitlab.com/nofusscomputing/projects/kubernetes_monitoring/-/commit/b6d0b18ece17dcd2733c6892cba7e8e83575fab0) - use correct variable for storage values [ [!5](https://gitlab.com/nofusscomputing/projects/kubernetes_monitoring/-/merge_requests/5) [!4](https://gitlab.com/nofusscomputing/projects/kubernetes_monitoring/-/merge_requests/4) ]
+
+### Features
+
+- **prometheus**: [562bb7d6](https://gitlab.com/nofusscomputing/projects/kubernetes_monitoring/-/commit/562bb7d6f57f52b3cf4fcaf19a15a8eed492d15e) - added config for ingress [ [!5](https://gitlab.com/nofusscomputing/projects/kubernetes_monitoring/-/merge_requests/5) [!3](https://gitlab.com/nofusscomputing/projects/kubernetes_monitoring/-/merge_requests/3) ]
+- **grafana**: [26a78bdb](https://gitlab.com/nofusscomputing/projects/kubernetes_monitoring/-/commit/26a78bdb3373cbed1d78785ded47e3dfae28c853) - added config for ingress [ [!5](https://gitlab.com/nofusscomputing/projects/kubernetes_monitoring/-/merge_requests/5) [!3](https://gitlab.com/nofusscomputing/projects/kubernetes_monitoring/-/merge_requests/3) ]
+- **alert_manager**: [65534660](https://gitlab.com/nofusscomputing/projects/kubernetes_monitoring/-/commit/65534660dda9b10761bf6067abc3297bec75a182) - added config for ingress [ [!5](https://gitlab.com/nofusscomputing/projects/kubernetes_monitoring/-/merge_requests/5) [!3](https://gitlab.com/nofusscomputing/projects/kubernetes_monitoring/-/merge_requests/3) ]
+
 ## 0.2.0rc0 (2023-11-06)
 
 ### Code Refactor
