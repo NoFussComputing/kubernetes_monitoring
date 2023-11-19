@@ -251,6 +251,28 @@ nfc_monitoring:
     image:
       name: prom/prometheus
       tag: 'v2.47.0'
+
+    ingress:
+      annotations:
+        cert-manager.io/cluster-issuer: "selfsigned-issuer"
+        nginx.ingress.kubernetes.io/ssl-redirect: "true"
+      # enabled: false # Optional, boolean.
+      spec:
+        tls:
+          - hosts:
+              - prometheus.local
+            secretName: certificate-tls-prometheus
+        rules:
+          - host:  prometheus.local
+            http:
+              paths:
+                - path: /
+                  pathType: Prefix
+                  backend:
+                    service:
+                      name: prometheus-k8s
+                      port:
+                        name: web
     
     # These labels are appended to all Prometheus items and are also the selector labels
     labels:
