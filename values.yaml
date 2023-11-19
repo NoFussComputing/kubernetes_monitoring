@@ -15,6 +15,29 @@ nfc_monitoring:
     image: 
       name: quay.io/prometheus/alertmanager
       tag: 'v0.26.0'
+
+
+    ingress:
+      annotations:
+        cert-manager.io/cluster-issuer: "selfsigned-issuer"
+        nginx.ingress.kubernetes.io/ssl-redirect: "true"
+      # enabled: false # Optional, boolean.
+      spec:
+        tls:
+          - hosts:
+              - alert-manager.local
+            secretName: certificate-tls-alert-manager
+        rules:
+          - host:  alert-manager.local
+            http:
+              paths:
+                - path: /
+                  pathType: Prefix
+                  backend:
+                    service:
+                      name: alertmanager-main
+                      port:
+                        name: web
     
     labels:
       app.kubernetes.io/instance: main
@@ -51,6 +74,28 @@ nfc_monitoring:
       name: grafana/grafana
       tag: '10.1.2' # '10.0.5'
 
+    ingress:
+      annotations:
+        cert-manager.io/cluster-issuer: "selfsigned-issuer"
+        nginx.ingress.kubernetes.io/ssl-redirect: "true"
+      # enabled: false # Optional, boolean.
+      spec:
+        tls:
+          - hosts:
+              - grafana.local
+            secretName: certificate-tls-grafana
+        rules:
+          - host:  grafana.local
+            http:
+              paths:
+                - path: /
+                  pathType: Prefix
+                  backend:
+                    service:
+                      name: grafana
+                      port:
+                        name: grafana-http
+
     labels:
       app.kubernetes.io/component: graphing
       app.kubernetes.io/instance: k8s
@@ -59,6 +104,8 @@ nfc_monitoring:
     namespace: grafana
 
     replicas: 1
+
+    # storage_accessModes: ReadWriteMany
 
     affinity: 
       nodeAffinity:
@@ -204,6 +251,28 @@ nfc_monitoring:
     image:
       name: prom/prometheus
       tag: 'v2.47.0'
+
+    ingress:
+      annotations:
+        cert-manager.io/cluster-issuer: "selfsigned-issuer"
+        nginx.ingress.kubernetes.io/ssl-redirect: "true"
+      # enabled: false # Optional, boolean.
+      spec:
+        tls:
+          - hosts:
+              - prometheus.local
+            secretName: certificate-tls-prometheus
+        rules:
+          - host:  prometheus.local
+            http:
+              paths:
+                - path: /
+                  pathType: Prefix
+                  backend:
+                    service:
+                      name: prometheus-k8s
+                      port:
+                        name: web
     
     # These labels are appended to all Prometheus items and are also the selector labels
     labels:
