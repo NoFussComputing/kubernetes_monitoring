@@ -1,0 +1,21 @@
+
+{{ range .Values.nfc_monitoring.network_policy.policies }}
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  labels:
+    {{ toYaml (get $.Values.nfc_monitoring .name ).labels | nindent 4 }}
+    app.kubernetes.io/managed-by: {{ $.Release.Service }}
+    app.kubernetes.io/part-of: {{ $.Chart.Name }}
+    app.kubernetes.io/version: {{ $.Chart.Version }}
+  name: {{ .name  | replace "_" "-" }}
+  namespace: {{ (get $.Values.nfc_monitoring .name ).namespace }}
+spec:
+  {{ toYaml .policy | nindent 2 }}
+
+  podSelector:
+    matchLabels:
+      {{ toYaml (get $.Values.nfc_monitoring .name ).labels | nindent 6 }}
+
+{{ end }}

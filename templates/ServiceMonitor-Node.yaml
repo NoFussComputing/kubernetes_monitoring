@@ -35,9 +35,43 @@ spec:
       sourceLabels:
       - __meta_kubernetes_pod_node_name
       targetLabel: node
+    metricRelabelings:
+      - action: drop
+        sourceLabels: [__name__]
+        regex: '(promtail_).*'
+
+  - bearerTokenFile: /var/run/secrets/kubernetes.io/serviceaccount/token
+    interval: 5s
+    honorLabels: true
+    path: /metrics
+    port: grafana-metrics
+    scheme: http
+    relabelings:
+    - action: replace
+      regex: (.*)
+      replacement: $1
+      sourceLabels:
+      - __meta_kubernetes_pod_node_name
+      targetLabel: instance
+    - targetLabel: "job"
+      replacement: "promtail"
+    - action: replace
+      regex: (.*)
+      replacement: $1
+      sourceLabels:
+      - __meta_kubernetes_pod_node_name
+      targetLabel: node
+    - action: replace
+      separator: /
+      sourceLabels:
+      - namespace
+      - job
+      targetLabel: job
+    metricRelabelings:
+      - action: keep
+        sourceLabels: [__name__]
+        regex: '(promtail_).*'
   selector:
     matchLabels:
-      app.kubernetes.io/instance: k8s
-      app.kubernetes.io/component: exporter
-      app.kubernetes.io/name: grafana-agent
+      {{ toYaml $.Values.nfc_monitoring.grafana_agent.labels | nindent 6 }}
       app.kubernetes.io/part-of: {{ $.Chart.Name }}

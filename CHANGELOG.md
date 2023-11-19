@@ -1,3 +1,24 @@
+## 0.2.0rc0 (2023-11-06)
+
+### Code Refactor
+
+- **grafana_datasources**: [cf38a415](https://gitlab.com/nofusscomputing/projects/kubernetes_monitoring/-/commit/cf38a4156adcbdda150fe309f1f7dd97a5a3bf07) - default prom set to thanos [ [!4](https://gitlab.com/nofusscomputing/projects/kubernetes_monitoring/-/merge_requests/4) ]
+
+### Features
+
+- **Grafana**: [b047f33e](https://gitlab.com/nofusscomputing/projects/kubernetes_monitoring/-/commit/b047f33e275d2e908f7e8a220944573f2e367bf7) - Configure grafana from values.yaml [ [!4](https://gitlab.com/nofusscomputing/projects/kubernetes_monitoring/-/merge_requests/4) ]
+- **GrafanaAgent**: [0c296c17](https://gitlab.com/nofusscomputing/projects/kubernetes_monitoring/-/commit/0c296c173e786c77504fabba337b464bcde6c290) - Network Policy added [ [!4](https://gitlab.com/nofusscomputing/projects/kubernetes_monitoring/-/merge_requests/4) ]
+- **grafana**: [7164bb2e](https://gitlab.com/nofusscomputing/projects/kubernetes_monitoring/-/commit/7164bb2e0b5f2c5e7fb59bcb64321eabb651b08e) - Network Policy added [ [!4](https://gitlab.com/nofusscomputing/projects/kubernetes_monitoring/-/merge_requests/4) ]
+- **prometheus**: [ae35e704](https://gitlab.com/nofusscomputing/projects/kubernetes_monitoring/-/commit/ae35e704e33bee4d2fea3390a7965a087e30acce) - Network Policy added [ [!4](https://gitlab.com/nofusscomputing/projects/kubernetes_monitoring/-/merge_requests/4) ]
+- **NetworkPolicy**: [5c62055d](https://gitlab.com/nofusscomputing/projects/kubernetes_monitoring/-/commit/5c62055d2f2041b33a2ab5ff8023cf8bd6b08df1) - configure from values.yaml [ [!4](https://gitlab.com/nofusscomputing/projects/kubernetes_monitoring/-/merge_requests/4) ]
+- **labels**: [03affbee](https://gitlab.com/nofusscomputing/projects/kubernetes_monitoring/-/commit/03affbee809d9e36f0930ae49ab07191e2b645a2) - lables moved to values.yaml [ [!4](https://gitlab.com/nofusscomputing/projects/kubernetes_monitoring/-/merge_requests/4) ]
+- **graph**: [65b61ecf](https://gitlab.com/nofusscomputing/projects/kubernetes_monitoring/-/commit/65b61ecf545800bcbf4efc7e3175951b9c6d2965) - add ceph size/used to dashboard [ [!4](https://gitlab.com/nofusscomputing/projects/kubernetes_monitoring/-/merge_requests/4) ]
+- **prometheus**: [7afc6aa5](https://gitlab.com/nofusscomputing/projects/kubernetes_monitoring/-/commit/7afc6aa515db4a43ce8dc1a152f45f400fc68a39) - rule selector configurable from values.yaml [ [!4](https://gitlab.com/nofusscomputing/projects/kubernetes_monitoring/-/merge_requests/4) ]
+- **promtail**: [2371adcb](https://gitlab.com/nofusscomputing/projects/kubernetes_monitoring/-/commit/2371adcbc5d64a27ff72b0ac45f589ccef4eb400) - split node to seperate promtail service monitor [ [!4](https://gitlab.com/nofusscomputing/projects/kubernetes_monitoring/-/merge_requests/4) ]
+- **grafana_agent**: [f73a9e46](https://gitlab.com/nofusscomputing/projects/kubernetes_monitoring/-/commit/f73a9e462e16dffbc0e17eaed3c0c78aff95d52b) - add prom rules [ [!4](https://gitlab.com/nofusscomputing/projects/kubernetes_monitoring/-/merge_requests/4) ]
+- **prometheus**: [5bb71971](https://gitlab.com/nofusscomputing/projects/kubernetes_monitoring/-/commit/5bb71971292b8f760e9b348652dc9df3c0dfa921) - tsdb retention set [ [!4](https://gitlab.com/nofusscomputing/projects/kubernetes_monitoring/-/merge_requests/4) ]
+- **thanos**: [be016187](https://gitlab.com/nofusscomputing/projects/kubernetes_monitoring/-/commit/be0161876d6b6868204af06255a01f08cc62c6ea) - prometheus rules added for sidecar [ [!4](https://gitlab.com/nofusscomputing/projects/kubernetes_monitoring/-/merge_requests/4) ]
+
 ## 0.1.0 (2023-09-27)
 
 ### Bug Fixes
