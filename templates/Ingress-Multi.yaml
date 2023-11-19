@@ -12,3 +12,18 @@ spec:
 
 {{ end }}
 
+{{ if .Values.nfc_monitoring.grafana.ingress.enabled | default "false" | bool -}}
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: grafana
+  namespace: "{{ .Values.nfc_monitoring.grafana.namespace }}"
+  annotations:
+    {{ toYaml $.Values.nfc_monitoring.grafana.ingress.annotations | nindent 4 }}
+spec:
+  {{ toYaml $.Values.nfc_monitoring.grafana.ingress.spec | nindent 2 }}
+
+{{ end }}
+
+

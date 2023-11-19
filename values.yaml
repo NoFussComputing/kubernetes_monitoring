@@ -74,6 +74,28 @@ nfc_monitoring:
       name: grafana/grafana
       tag: '10.1.2' # '10.0.5'
 
+    ingress:
+      annotations:
+        cert-manager.io/cluster-issuer: "selfsigned-issuer"
+        nginx.ingress.kubernetes.io/ssl-redirect: "true"
+      # enabled: false # Optional, boolean.
+      spec:
+        tls:
+          - hosts:
+              - grafana.local
+            secretName: certificate-tls-grafana
+        rules:
+          - host:  grafana.local
+            http:
+              paths:
+                - path: /
+                  pathType: Prefix
+                  backend:
+                    service:
+                      name: grafana
+                      port:
+                        name: grafana-http
+
     labels:
       app.kubernetes.io/component: graphing
       app.kubernetes.io/instance: k8s
