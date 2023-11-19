@@ -15,6 +15,29 @@ nfc_monitoring:
     image: 
       name: quay.io/prometheus/alertmanager
       tag: 'v0.26.0'
+
+
+    ingress:
+      annotations:
+        cert-manager.io/cluster-issuer: "selfsigned-issuer"
+        nginx.ingress.kubernetes.io/ssl-redirect: "true"
+      # enabled: false # Optional, boolean.
+      spec:
+        tls:
+          - hosts:
+              - alert-manager.local
+            secretName: certificate-tls-alert-manager
+        rules:
+          - host:  alert-manager.local
+            http:
+              paths:
+                - path: /
+                  pathType: Prefix
+                  backend:
+                    service:
+                      name: alertmanager-main
+                      port:
+                        name: web
     
     labels:
       app.kubernetes.io/instance: main
