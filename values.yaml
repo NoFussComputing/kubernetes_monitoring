@@ -60,6 +60,8 @@ nfc_monitoring:
 
     replicas: 1
 
+    # storage_accessModes: ReadWriteMany
+
     affinity: 
       nodeAffinity:
         preferredDuringSchedulingIgnoredDuringExecution:
