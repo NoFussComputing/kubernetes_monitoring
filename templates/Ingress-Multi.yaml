@@ -3,7 +3,7 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: alert_manager
+  name: alertmanager
   namespace: "{{ .Values.nfc_monitoring.alert_manager.namespace }}"
   annotations:
     {{ toYaml $.Values.nfc_monitoring.alert_manager.ingress.annotations | nindent 4 }}
