@@ -1,3 +1,4 @@
+{{ if .Values.nfc_monitoring.kube_state_metrics.enabled }}
 ---
 apiVersion: monitoring.coreos.com/v1
 kind: PrometheusRule
@@ -65,3 +66,5 @@ spec:
       for: 15m
       labels:
         severity: critical
+
+{{ end }}

@@ -1,3 +1,4 @@
+{{ if .Values.nfc_monitoring.kube_state_metrics.enabled }}
 ---
 apiVersion: v1
 kind: Service
@@ -26,3 +27,4 @@ spec:
     app.kubernetes.io/name: kube-state-metrics
     app.kubernetes.io/part-of: {{ $.Chart.Name }}
 
+{{ end }}
