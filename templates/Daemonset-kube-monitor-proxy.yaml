@@ -1,3 +1,4 @@
+{{ if .Values.nfc_monitoring.kube_monitor_proxy.enabled }}
 ---
 apiVersion: apps/v1
 kind: DaemonSet
@@ -134,3 +135,5 @@ spec:
       serviceAccountName: kube-monitor-proxy
       tolerations:
       - operator: Exists
+
+{{ end }}

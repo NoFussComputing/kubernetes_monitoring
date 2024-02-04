@@ -1,4 +1,5 @@
 {{ if .Values.nfc_monitoring.prometheus.service_monitor.kube_controller_manager }}
+{{ if .Values.nfc_monitoring.kube_monitor_proxy.enabled }}
 ---
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
@@ -82,4 +83,5 @@ spec:
       app.kubernetes.io/name: kube-monitor-proxy
       app.kubernetes.io/part-of: {{ $.Chart.Name }}
 
+{{ end }}
 {{ end }}

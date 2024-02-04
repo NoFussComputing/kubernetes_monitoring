@@ -241,10 +241,12 @@ nfc_monitoring:
 
 
   kube_monitor_proxy:
+    enabled: false
     namespace: monitoring
 
 
   kube_rbac_proxy:
+
     # This image is used as part of kube-monitor-proxy.
     image: 
       name: quay.io/brancz/kube-rbac-proxy
@@ -386,6 +388,16 @@ nfc_monitoring:
       ruleSelector:
         matchLabels:
           role: alert-rules
+
+    service_monitors:
+      apiserver: false
+      cadvisor: false
+      calico: false
+      ceph: false
+      coredns: false
+      kube_controller_manager: false
+      kubelet: false
+      kube_scheduler: false
 
 
   prometheus_adaptor:

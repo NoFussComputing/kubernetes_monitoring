@@ -1,3 +1,4 @@
+{{ if .Values.nfc_monitoring.kube_monitor_proxy.enabled }}
 ---
 apiVersion: monitoring.coreos.com/v1
 kind: PrometheusRule
@@ -1439,3 +1440,5 @@ spec:
       labels:
         quantile: "0.5"
       record: node_quantile:kubelet_pleg_relist_duration_seconds:histogram_quantile
+
+{{ end }}
