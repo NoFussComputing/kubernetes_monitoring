@@ -4,6 +4,7 @@ kind: Deployment
 metadata:
   labels:
     {{ toYaml $.Values.nfc_monitoring.prometheus_adaptor.labels | nindent 4 }}
+    app.kubernetes.io/instance: {{ $.Release.Name }}
     app.kubernetes.io/part-of: {{ $.Chart.Name }}
     app.kubernetes.io/managed-by: {{ $.Release.Service }}
     app.kubernetes.io/version: {{ $.Chart.Version }}
@@ -14,6 +15,7 @@ spec:
   selector:
     matchLabels:
       {{ toYaml $.Values.nfc_monitoring.prometheus_adaptor.labels | nindent 6 }}
+      app.kubernetes.io/instance: {{ $.Release.Name }}
       app.kubernetes.io/part-of: {{ $.Chart.Name }}
       app.kubernetes.io/managed-by: {{ $.Release.Service }}
       app.kubernetes.io/version: {{ $.Chart.Version }}
@@ -25,6 +27,7 @@ spec:
     metadata:
       labels:
         {{ toYaml $.Values.nfc_monitoring.prometheus_adaptor.labels | nindent 8 }}
+        app.kubernetes.io/instance: {{ $.Release.Name }}
         app.kubernetes.io/part-of: {{ $.Chart.Name }}
         app.kubernetes.io/managed-by: {{ $.Release.Service }}
         app.kubernetes.io/version: {{ $.Chart.Version }}

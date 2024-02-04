@@ -45,7 +45,6 @@ nfc_monitoring:
                         name: web
     
     labels:
-      app.kubernetes.io/instance: main
       app.kubernetes.io/component: alert-router
       app.kubernetes.io/name: alertmanager
 
@@ -105,7 +104,6 @@ nfc_monitoring:
 
     labels:
       app.kubernetes.io/component: graphing
-      app.kubernetes.io/instance: k8s
       app.kubernetes.io/name: grafana
 
     namespace: grafana
@@ -210,7 +208,6 @@ nfc_monitoring:
       tag: 'v0.39.2'
 
     labels:
-      app.kubernetes.io/instance: k8s
       app.kubernetes.io/component: exporter
       app.kubernetes.io/name: grafana-agent
 
@@ -292,28 +289,13 @@ nfc_monitoring:
       annotations:
         cert-manager.io/cluster-issuer: "selfsigned-issuer"
         nginx.ingress.kubernetes.io/ssl-redirect: "true"
-      # enabled: false # Optional, boolean.
-      spec:
-        tls:
-          - hosts:
-              - prometheus.local
-            secretName: certificate-tls-prometheus
-        rules:
-          - host:  prometheus.local
-            http:
-              paths:
-                - path: /
-                  pathType: Prefix
-                  backend:
-                    service:
-                      name: prometheus-k8s
-                      port:
-                        name: web
+      enabled: true
+      hostname:  prometheus.local
+
     
     # These labels are appended to all Prometheus items and are also the selector labels
     labels:
       app.kubernetes.io/component: prometheus
-      app.kubernetes.io/instance: k8s
       app.kubernetes.io/name: prometheus
 
     namespace: monitoring
@@ -411,7 +393,6 @@ nfc_monitoring:
 
     labels:
       app.kubernetes.io/component: metrics-adapter
-      app.kubernetes.io/instance: main
       app.kubernetes.io/name: prometheus-adapter
 
     namespace: monitoring

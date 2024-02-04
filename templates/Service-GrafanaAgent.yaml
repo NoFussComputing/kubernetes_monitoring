@@ -6,12 +6,14 @@ metadata:
   namespace: monitoring
   labels:
     {{ toYaml $.Values.nfc_monitoring.grafana_agent.labels | nindent 4 }}
+    app.kubernetes.io/instance: {{ $.Release.Name }}
     app.kubernetes.io/managed-by: {{ $.Release.Service }}
     app.kubernetes.io/part-of: {{ $.Chart.Name }}
     app.kubernetes.io/version: {{ $.Chart.Version }}
 spec:
   selector:
     {{ toYaml $.Values.nfc_monitoring.grafana_agent.labels | nindent 4 }}
+    app.kubernetes.io/instance: {{ $.Release.Name }}
     app.kubernetes.io/part-of: {{ $.Chart.Name }}
   ports:
     - name: grafana-metrics

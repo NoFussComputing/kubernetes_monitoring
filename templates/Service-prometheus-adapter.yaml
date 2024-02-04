@@ -4,6 +4,7 @@ kind: Service
 metadata:
   labels:
     {{ toYaml $.Values.nfc_monitoring.prometheus_adaptor.labels | nindent 4 }}
+    app.kubernetes.io/instance: {{ $.Release.Name }}
     app.kubernetes.io/part-of: {{ $.Chart.Name }}
     app.kubernetes.io/managed-by: {{ $.Release.Service }}
     app.kubernetes.io/version: {{ $.Chart.Version }}
@@ -16,4 +17,5 @@ spec:
     targetPort: 6443
   selector:
     {{ toYaml $.Values.nfc_monitoring.prometheus_adaptor.labels | nindent 4 }}
+    app.kubernetes.io/instance: {{ $.Release.Name }}
     app.kubernetes.io/part-of: {{ $.Chart.Name }}

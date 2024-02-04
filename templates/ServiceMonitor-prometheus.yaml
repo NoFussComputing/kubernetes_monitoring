@@ -5,10 +5,11 @@ kind: ServiceMonitor
 metadata:
   labels:
     {{ toYaml $.Values.nfc_monitoring.prometheus.labels | nindent 4 }}
+    app.kubernetes.io/instance: {{ $.Release.Name }}
     app.kubernetes.io/part-of: {{ $.Chart.Name }}
     app.kubernetes.io/managed-by: {{ $.Release.Service }}
     app.kubernetes.io/version: {{ $.Chart.Version }}
-  name: prometheus-k8s
+  name: prometheus-{{ $.Release.Name }}
   namespace: {{ .Values.nfc_monitoring.prometheus.namespace }}
 spec:
   endpoints:
@@ -26,6 +27,7 @@ spec:
   selector:
     matchLabels:
       {{ toYaml $.Values.nfc_monitoring.prometheus.labels | nindent 6 }}
+      app.kubernetes.io/instance: {{ $.Release.Name }}
       app.kubernetes.io/part-of: {{ $.Chart.Name }}
 
 {{ if .Values.nfc_monitoring.thanos.sidecar.enabled }}
@@ -37,7 +39,7 @@ kind: ServiceMonitor
 metadata:
   labels:
     app.kubernetes.io/component: prometheus-sidecar
-    app.kubernetes.io/instance: thanos-sidecar
+    app.kubernetes.io/instance: {{ $.Release.Name }}
     app.kubernetes.io/name: thanos-sidecar
     app.kubernetes.io/version: v0.30.2
   name: thanos-sidecar
@@ -55,7 +57,7 @@ spec:
   selector:
     matchLabels:
       app.kubernetes.io/component: prometheus-sidecar
-      app.kubernetes.io/instance: k8s
+      app.kubernetes.io/instance: {{ $.Release.Name }}
       app.kubernetes.io/name: thanos-sidecar
       app.kubernetes.io/part-of: {{ $.Chart.Name }}
 

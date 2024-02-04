@@ -5,6 +5,7 @@ kind: ServiceMonitor
 metadata:
   labels:
     app.kubernetes.io/component: exporter
+    app.kubernetes.io/instance: {{ $.Release.Name }}
     app.kubernetes.io/name: node
     app.kubernetes.io/part-of: {{ $.Chart.Name }}
     app.kubernetes.io/version: {{ $.Chart.Version }}
@@ -75,6 +76,7 @@ spec:
   selector:
     matchLabels:
       {{ toYaml $.Values.nfc_monitoring.grafana_agent.labels | nindent 6 }}
+      app.kubernetes.io/instance: {{ $.Release.Name }}
       app.kubernetes.io/part-of: {{ $.Chart.Name }}
 
 {{ end }}

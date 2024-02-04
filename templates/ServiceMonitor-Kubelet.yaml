@@ -4,6 +4,7 @@ apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
   labels:
+    app.kubernetes.io/instance: {{ $.Release.Name }}
     app.kubernetes.io/name: kubelet
     app.kubernetes.io/part-of: {{ $.Chart.Name }}
     app.kubernetes.io/version: {{ $.Chart.Version }}
@@ -86,5 +87,6 @@ spec:
   selector:
     matchLabels:
       app.kubernetes.io/name: kubelet
+      app.kubernetes.io/instance: {{ $.Release.Name }}
 
 {{ end }}

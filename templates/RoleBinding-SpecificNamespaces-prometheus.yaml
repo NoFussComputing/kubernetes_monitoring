@@ -7,18 +7,19 @@ items:
   metadata:
     labels:
       {{ toYaml $.Values.nfc_monitoring.prometheus.labels | nindent 6 }}
+      app.kubernetes.io/instance: {{ $.Release.Name }}
       app.kubernetes.io/part-of: {{ $.Chart.Name }}
       app.kubernetes.io/managed-by: {{ $.Release.Service }}
       app.kubernetes.io/version: {{ $.Chart.Version }}
-    name: prometheus-k8s
+    name: prometheus-{{ $.Release.Name }}
     namespace: {{ . | quote }}
   roleRef:
     apiGroup: rbac.authorization.k8s.io
     kind: Role
-    name: prometheus-k8s
+    name: prometheus-{{ $.Release.Name }}
   subjects:
   - kind: ServiceAccount
-    name: prometheus-k8s
+    name: prometheus-{{ $.Release.Name }}
     namespace: {{ $.Values.nfc_monitoring.prometheus.namespace }}
 {{ end }}
 
