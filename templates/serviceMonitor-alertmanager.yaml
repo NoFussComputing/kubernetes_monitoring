@@ -14,8 +14,23 @@ spec:
   endpoints:
   - interval: 30s
     port: web
+    relabelings:
+    - action: replace
+      regex: (.*)
+      replacement: $1
+      sourceLabels:
+      - __meta_kubernetes_pod_name
+      targetLabel: instance
   - interval: 30s
     port: reloader-web
+    relabelings:
+    - action: replace
+      regex: (.*)
+      replacement: $1
+      sourceLabels:
+      - __meta_kubernetes_pod_name
+      targetLabel: instance
+    
   namespaceSelector:
     matchNames:
     - "{{ .Values.nfc_monitoring.alert_manager.namespace }}"
