@@ -259,6 +259,23 @@ nfc_monitoring:
     # How many replicas to deploy
     replicas: 1
 
+    # Configure prometheus to write metrics to remote host
+    # below example config uses a secret named "prometheus-remote-write" with two keys username and password.
+    # Documentation: https://prometheus-operator.dev/docs/operator/api/#monitoring.coreos.com/v1.RemoteWriteSpec
+    remotewrite: {}
+      # url:
+      # name:
+      # remoteTimeout: 30
+      # writeRelabelConfigs:
+      # basicAuth:
+      #   username:
+      #     name: prometheus-remote-write
+      #     key: username
+      #   password:
+      #     name: prometheus-remote-write
+      #     key: password
+
+
     ingress:
       annotations:
         cert-manager.io/cluster-issuer: "selfsigned-issuer"
