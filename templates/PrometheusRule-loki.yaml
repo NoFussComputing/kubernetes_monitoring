@@ -1,5 +1,6 @@
 ---
 {{- if .Values.nfc_monitoring.loki.enabled | default false -}}
+{{ if .Values.nfc_monitoring.loki.config }}
 apiVersion: monitoring.coreos.com/v1
 kind: PrometheusRule
 metadata:
@@ -110,4 +111,5 @@ spec:
       labels:
         severity: warning
 
+{{ end }}
 {{- end -}}
