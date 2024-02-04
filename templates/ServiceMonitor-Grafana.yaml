@@ -34,3 +34,4 @@ spec:
       app.kubernetes.io/part-of: {{ $.Chart.Name }}
 
 {{- end }}
+

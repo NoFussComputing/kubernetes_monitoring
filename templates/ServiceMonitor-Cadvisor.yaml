@@ -1,3 +1,4 @@
+{{ if .Values.nfc_monitoring.prometheus.service_monitor.cadvisor }}
 ---
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
@@ -50,3 +51,5 @@ spec:
   selector:
     matchLabels:
       app.kubernetes.io/name: kubelet
+
+{{ end }}

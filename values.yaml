@@ -12,6 +12,8 @@ nfc_monitoring:
 
 
   alert_manager:
+
+    enabled: true 
     image: 
       name: quay.io/prometheus/alertmanager
       tag: 'v0.26.0'
@@ -200,6 +202,9 @@ nfc_monitoring:
 
 
   grafana_agent:
+
+    enabled: true 
+
     image: 
       name: grafana/agent
       tag: 'v0.36.1'
@@ -247,6 +252,8 @@ nfc_monitoring:
 
 
   kube_state_metrics:
+
+    enabled: false
     image: 
       name: registry.k8s.io/kube-state-metrics/kube-state-metrics
       tag: 'v2.8.1'
@@ -382,6 +389,8 @@ nfc_monitoring:
 
 
   prometheus_adaptor:
+
+    enalbed: false
 
     image:
       name: registry.k8s.io/prometheus-adapter/prometheus-adapter

@@ -1,3 +1,4 @@
+{{ if .Values.nfc_monitoring.prometheus_adaptor.enabled }}
 ---
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
@@ -33,3 +34,5 @@ spec:
     matchLabels:
       {{ toYaml $.Values.nfc_monitoring.prometheus_adaptor.labels | nindent 6 }}
       app.kubernetes.io/part-of: {{ $.Chart.Name }}
+
+{{ end }}

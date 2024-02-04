@@ -1,3 +1,4 @@
+{{ if .Values.nfc_monitoring.prometheus.service_monitor.apiserver }}
 ---
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
@@ -76,3 +77,5 @@ spec:
     matchLabels:
       component: apiserver
       provider: kubernetes
+
+{{ end }}

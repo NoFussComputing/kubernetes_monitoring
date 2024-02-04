@@ -1,3 +1,4 @@
+{{ if .Values.nfc_monitoring.prometheus.enabled }}
 ---
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
