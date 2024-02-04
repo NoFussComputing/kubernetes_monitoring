@@ -26,23 +26,11 @@ nfc_monitoring:
       annotations:
         cert-manager.io/cluster-issuer: "selfsigned-issuer"
         nginx.ingress.kubernetes.io/ssl-redirect: "true"
-      # enabled: false # Optional, boolean.
-      spec:
-        tls:
-          - hosts:
-              - alert-manager.local
-            secretName: certificate-tls-alert-manager
-        rules:
-          - host:  alert-manager.local
-            http:
-              paths:
-                - path: /
-                  pathType: Prefix
-                  backend:
-                    service:
-                      name: alertmanager-main
-                      port:
-                        name: web
+      
+      enabled: false
+
+      hostname: alert-manager.local
+
     
     labels:
       app.kubernetes.io/component: alert-router
@@ -84,23 +72,11 @@ nfc_monitoring:
       annotations:
         cert-manager.io/cluster-issuer: "selfsigned-issuer"
         nginx.ingress.kubernetes.io/ssl-redirect: "true"
-      # enabled: false # Optional, boolean.
-      spec:
-        tls:
-          - hosts:
-              - grafana.local
-            secretName: certificate-tls-grafana
-        rules:
-          - host:  grafana.local
-            http:
-              paths:
-                - path: /
-                  pathType: Prefix
-                  backend:
-                    service:
-                      name: grafana
-                      port:
-                        name: grafana-http
+      
+      enabled: true
+      
+      hostname:  grafana.local
+
 
     labels:
       app.kubernetes.io/component: graphing
@@ -267,6 +243,9 @@ nfc_monitoring:
 
     # How many replicas to deploy
     replicas: 1
+
+    # alertmanagers:
+    #   - name: 
 
     # Configure prometheus to write metrics to remote host
     # below example config uses a secret named "prometheus-remote-write" with two keys username and password.
@@ -738,7 +717,6 @@ nfc_monitoring:
                   podSelector:
                     matchLabels:
                       app.kubernetes.io/component: prometheus
-                      app.kubernetes.io/instance: k8s
                       app.kubernetes.io/name: prometheus
               ports:
                 - port: 12345
