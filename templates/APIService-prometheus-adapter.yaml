@@ -1,3 +1,5 @@
+{{ if false }}
+# already on k3s
 ---
 apiVersion: apiregistration.k8s.io/v1
 kind: APIService
@@ -17,3 +19,4 @@ spec:
     namespace: monitoring
   version: v1beta1
   versionPriority: 100
+{{ end }}
