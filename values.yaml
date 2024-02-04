@@ -222,9 +222,11 @@ nfc_monitoring:
 
     namespace: logging
 
+    # If no config is setup, logging will not be enabled.
+    config: {}
     # service name and port are used for the connection to your loki instance
-    service_name: loki-gateway
-    service_port: 80
+    # service_name: loki-gateway
+    # service_port: 80
 
     ServiceMonitor:
       selector:
