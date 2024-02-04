@@ -390,7 +390,7 @@ nfc_monitoring:
         matchLabels:
           role: alert-rules
 
-    service_monitors:
+    service_monitor:
       apiserver: false
       cadvisor: false
       calico: false
