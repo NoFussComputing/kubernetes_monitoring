@@ -310,6 +310,7 @@ nfc_monitoring:
     monitor_namespaces:
       - alerting
       - default
+      - calico-system
       # - ceph
       #- grafana
       - monitoring

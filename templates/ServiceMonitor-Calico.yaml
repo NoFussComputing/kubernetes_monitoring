@@ -13,7 +13,7 @@ metadata:
     app.kubernetes.io/managed-by: {{ $.Release.Service }}
     k8s-app: calico-node
   name: calico
-  namespace: kube-system
+  namespace: calico-system
 spec:
   endpoints:
   - bearerTokenFile: /var/run/secrets/kubernetes.io/serviceaccount/token
