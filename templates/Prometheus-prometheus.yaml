@@ -20,7 +20,7 @@ spec:
       port: web
   enableFeatures: []
   externalLabels: {}
-  image: quay.io/prometheus/prometheus:v2.42.0
+  image: {{ .Values.nfc_monitoring.prometheus.image.name }}:{{ .Values.nfc_monitoring.prometheus.image.tag}}
   nodeSelector:
     kubernetes.io/os: linux
   podMetadata:
