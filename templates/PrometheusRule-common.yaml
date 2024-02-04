@@ -15,7 +15,7 @@ metadata:
   namespace: {{ .Values.nfc_monitoring.prometheus.namespace }}
 spec:
   groups:
-  - name: general.rules
+  - name: common.rules
     rules:
 
     - alert: Watchdog
