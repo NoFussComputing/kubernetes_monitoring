@@ -17,6 +17,16 @@ spec:
   groups:
   - name: node-exporter
     rules:
+{{ range $index, $node := (lookup "v1" "Node" "" "").items }}
+    - alert: NodeExporterJobMissing-{{ $node.metadata.name }}
+      annotations:
+        summary: Node Exporter job missing for node {{ $node.metadata.name }}. (instance {{ `{{` }} $labels.instance }})
+        description: "Node Exporter job has disappeared\n  Node = {{ $node.metadata.name }}\n  Value = {{ `{{` }} $value }}\n  LABELS = {{ `{{` }} $labels }}"
+      expr: absent(up{job="node-exporter", node="{{ $node.metadata.name }}"})
+      for: 0m
+      labels:
+        severity: critical
+{{ end }}
     - alert: NodeFilesystemSpaceFillingUp
       annotations:
         description: Filesystem on {{ `{{` }} $labels.device }} at {{ `{{` }} $labels.instance }} has only {{ `{{` }} printf "%.2f" $value }}% available space left and is filling up.
