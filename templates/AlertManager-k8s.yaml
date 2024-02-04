@@ -21,7 +21,7 @@ spec:
       app.kubernetes.io/part-of: {{ $.Chart.Name }}
       app.kubernetes.io/managed-by: {{ $.Release.Service }}
       app.kubernetes.io/version: {{ $.Chart.Version }}
-  replicas: 3
+  replicas: {{ .Values.nfc_monitoring.alert_manager.replicas }}
   resources:
     limits:
       cpu: 100m

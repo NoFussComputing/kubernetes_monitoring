@@ -16,6 +16,9 @@ nfc_monitoring:
       name: quay.io/prometheus/alertmanager
       tag: 'v0.26.0'
 
+    # How many replicas to deploy
+    replicas: 1
+
 
     ingress:
       annotations:
