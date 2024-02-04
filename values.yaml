@@ -207,7 +207,7 @@ nfc_monitoring:
 
     image: 
       name: grafana/agent
-      tag: 'v0.36.1'
+      tag: 'v0.39.2'
 
     labels:
       app.kubernetes.io/instance: k8s
@@ -266,6 +266,7 @@ nfc_monitoring:
 
     image:
       name: prom/prometheus
+      tag: 'v2.49.0'
 
     # How many replicas to deploy
     replicas: 1
@@ -349,7 +350,7 @@ nfc_monitoring:
       - alerting
       - default
       # - ceph
-      - grafana
+      #- grafana
       - monitoring
       # - kube-dashboard
       # - kube-metrics
@@ -384,7 +385,7 @@ nfc_monitoring:
       #     url: http://mimir-gateway.metrics.svc.cluster.local/api/v1/push
 
       retention: 24h
-      retentionSize: 20GB
+      retentionSize: 2GB
       ruleSelector:
         matchLabels:
           role: alert-rules
@@ -467,7 +468,7 @@ nfc_monitoring:
 
     ceph:
 
-      enabled: true
+      enabled: false
 
       namespace: ceph
 
@@ -482,7 +483,7 @@ nfc_monitoring:
     # Add sidecar to grafana pod to load dashboards from configMap
     dashboard_sidecar: 
       
-      enabled: true
+      enabled: false
 
       image:
         name: ghcr.io/kiwigrid/k8s-sidecar
@@ -494,7 +495,7 @@ nfc_monitoring:
 
   network_policy:
     
-    enabled: true
+    enabled: false
 
     # Network Policies to apply. These policies are automagically build using the values below.
     # What you would find under path root.spec belongs here.
