@@ -255,7 +255,9 @@ nfc_monitoring:
 
     image:
       name: prom/prometheus
-      tag: 'v2.47.0'
+
+    # How many replicas to deploy
+    replicas: 1
 
     ingress:
       annotations:

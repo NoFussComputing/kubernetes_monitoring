@@ -33,7 +33,7 @@ spec:
   podMonitorSelector: {}
   probeNamespaceSelector: {}
   probeSelector: {}
-  replicas: 3
+  replicas: {{ $.Values.nfc_monitoring.prometheus.replicas }}
   resources:
     requests:
       memory: 400Mi
