@@ -1,3 +1,4 @@
+{{ if .Values.nfc_monitoring.grafana.enabled -}}
 {{ if .Values.nfc_monitoring.additions.dashboard_sidecar.enabled -}}
 ---
 kind: ClusterRoleBinding
@@ -17,4 +18,5 @@ subjects:
   - kind: ServiceAccount
     name: grafana
     namespace: "{{ .Values.nfc_monitoring.grafana.namespace }}"
+{{- end }}
 {{- end }}

@@ -1,3 +1,4 @@
+{{ if .Values.nfc_monitoring.grafana.enabled -}}
 ---
 apiVersion: grafana.integreatly.org/v1beta1
 kind: GrafanaDashboard
@@ -16,3 +17,5 @@ spec:
   grafanaCom:
     id: 9578
     revision: 4 # as @ 19-09-23
+
+{{- end }}

@@ -1,4 +1,5 @@
 ---
+{{ if .Values.nfc_monitoring.grafana.enabled -}}
 apiVersion: grafana.integreatly.org/v1beta1
 kind: Grafana
 metadata:
@@ -147,3 +148,5 @@ spec:
       resources:
         requests:
           storage: "5Gi"
+
+{{- end }}

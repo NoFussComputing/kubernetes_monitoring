@@ -52,6 +52,8 @@ nfc_monitoring:
 
   grafana:
 
+    enabled: false
+
     # Grafana Configuration
     # Type: Dict
     # See: https://grafana.com/docs/grafana/latest/setup-grafana/configure-grafana

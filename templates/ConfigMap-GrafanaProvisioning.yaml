@@ -1,3 +1,4 @@
+{{ if .Values.nfc_monitoring.grafana.enabled -}}
 {{ if .Values.nfc_monitoring.additions.dashboard_sidecar.enabled -}}
 ---
 # Provisioning config
@@ -26,4 +27,5 @@ data:
         options:
           path: /var/lib/grafana/dashboards
           foldersFromFilesStructure: true
+{{- end }}
 {{- end }}

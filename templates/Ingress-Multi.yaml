@@ -12,7 +12,8 @@ spec:
 
 {{ end }}
 
-{{ if .Values.nfc_monitoring.grafana.ingress.enabled | default "false" -}}
+{{ if .Values.nfc_monitoring.grafana.enabled -}}
+{{ if .Values.nfc_monitoring.grafana.ingress.enabled -}}
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
@@ -24,6 +25,7 @@ metadata:
 spec:
   {{ toYaml $.Values.nfc_monitoring.grafana.ingress.spec | nindent 2 }}
 
+{{ end }}
 {{ end }}
 
 {{ if .Values.nfc_monitoring.prometheus.ingress.enabled | default "false" -}}

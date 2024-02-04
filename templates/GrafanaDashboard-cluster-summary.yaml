@@ -1,4 +1,5 @@
 ---
+{{ if .Values.nfc_monitoring.grafana.enabled -}}
 apiVersion: grafana.integreatly.org/v1beta1
 kind: GrafanaDashboard
 metadata:
@@ -17,3 +18,4 @@ spec:
   json: >-
     {{ $Dashboard | toRawJson }}
 
+{{- end }}

@@ -1,3 +1,4 @@
+{{ if .Values.nfc_monitoring.grafana.enabled -}}
 ---
 {{- if .Values.nfc_monitoring.additions.ceph.enabled | default false -}}
 apiVersion: grafana.integreatly.org/v1beta1
@@ -19,3 +20,4 @@ spec:
     revision: 17 # as @ 19-09-23
 
 {{- end -}}
+{{- end }}

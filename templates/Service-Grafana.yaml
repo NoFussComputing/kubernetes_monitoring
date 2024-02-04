@@ -1,5 +1,5 @@
+{{ if .Values.nfc_monitoring.grafana.enabled -}}
 ---
-
 apiVersion: v1
 kind: Service
 metadata:
@@ -24,3 +24,5 @@ spec:
       #nodePort: 3000
   #type: LoadBalancer
   sessionAffinity: ClientIP
+
+{{- end }}
