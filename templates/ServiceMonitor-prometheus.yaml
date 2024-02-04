@@ -28,6 +28,8 @@ spec:
       app.kubernetes.io/part-of: {{ $.Chart.Name }}
 
 {{ if .Values.nfc_monitoring.thanos.sidecar.enabled }}
+{{ if .Values.nfc_monitoring.thanos.sidecar.config }}
+
 ---
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
@@ -56,4 +58,5 @@ spec:
       app.kubernetes.io/name: thanos-sidecar
       app.kubernetes.io/part-of: {{ $.Chart.Name }}
 
+{{ end }}
 {{ end }}

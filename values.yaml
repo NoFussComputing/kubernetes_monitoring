@@ -409,15 +409,16 @@ nfc_monitoring:
     sidecar:
 
       enabled: true
-
-      config:
-        type: S3
-        config:
-          bucket: "thanos-metrics"
-          endpoint: "rook-ceph-rgw-earth.ceph.svc:80"
-          access_key: "7J5NM2MNCDB4T4Y9OKJ5"
-          secret_key: "t9r69RzZdWEBL3NCKiUIpDk6j5625xc6HucusiGG"
-          insecure: true
+      
+      # Config must be specified for the sidecar to deploy
+      config: {}
+      #   type: S3
+      #   config:
+      #     bucket: "thanos-metrics"
+      #     endpoint: "rook-ceph-rgw-earth.ceph.svc:80"
+      #     access_key: "7J5NM2MNCDB4T4Y9OKJ5"
+      #     secret_key: "t9r69RzZdWEBL3NCKiUIpDk6j5625xc6HucusiGG"
+      #     insecure: true
 
 
   additions:

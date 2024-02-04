@@ -1,4 +1,5 @@
 {{ if .Values.nfc_monitoring.thanos.sidecar.enabled }}
+{{ if .Values.nfc_monitoring.thanos.sidecar.config }}
 ---
 apiVersion: monitoring.coreos.com/v1
 kind: PrometheusRule
@@ -52,4 +53,5 @@ spec:
         labels:
           severity: critical
 
+{{ end }}
 {{ end }}
