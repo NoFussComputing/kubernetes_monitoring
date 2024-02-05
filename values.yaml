@@ -342,9 +342,8 @@ nfc_monitoring:
     # Type: dict
     additional:
 
+      # Don't declare remoteWrite Here, as it's don at path .prometheus.remote_write
       # remoteWrite: 
-      #   - name: mimir
-      #     url: http://mimir-gateway.metrics.svc.cluster.local/api/v1/push
 
       retention: 24h
       retentionSize: 2GB
