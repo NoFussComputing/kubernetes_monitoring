@@ -1,0 +1,21 @@
+---
+{{ if .Values.nfc_monitoring.grafana.dashboards.cert_manager | default false -}}
+apiVersion: grafana.integreatly.org/v1beta1
+kind: GrafanaDashboard
+metadata:
+  name: node-exporter
+  namespace: {{ .Values.nfc_monitoring.grafana.namespace }}
+spec:
+  allowCrossNamespaceImport: true
+  folder: No Fuss Monitoring
+  resyncPeriod: 1d
+  instanceSelector:
+    matchLabels:
+      app.kubernetes.io/component: graphing
+      app.kubernetes.io/instance: {{ $.Release.Name }}
+      app.kubernetes.io/name: grafana
+  grafanaCom:
+    id: 11001
+    revision: 1 # as @ 2019-10-16T13:48:56
+
+{{- end }}

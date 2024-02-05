@@ -41,6 +41,9 @@ nfc_monitoring:
 
   grafana:
 
+    dashboards:
+      cert_manager: false
+
     enabled: false
 
     # Grafana Configuration
