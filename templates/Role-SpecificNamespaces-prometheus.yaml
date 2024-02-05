@@ -2,7 +2,7 @@
 apiVersion: rbac.authorization.k8s.io/v1
 items:
 
-{{ range .Values.nfc_monitoring.prometheus.monitor_namespaces }}
+{{ range $index, $namespace := (lookup "v1" "Namespace" "" "").items }}
 - apiVersion: rbac.authorization.k8s.io/v1
   kind: Role
   metadata:
@@ -13,7 +13,7 @@ items:
       app.kubernetes.io/managed-by: {{ $.Release.Service }}
       app.kubernetes.io/version: {{ $.Chart.Version }}
     name: prometheus-{{ $.Release.Name }}
-    namespace: {{ . | quote }}
+    namespace: {{ $namespace.metadata.name | quote }}
   rules:
   - apiGroups:
     - ""

@@ -304,24 +304,6 @@ nfc_monitoring:
             topologyKey: kubernetes.io/hostname
           weight: 10
 
-    # List of namespaces that prometheus is to monitor
-    # used to create Roles and RoleBindings
-    # type: list
-    monitor_namespaces:
-      - alerting
-      - default
-      - calico-system
-      # - ceph
-      #- grafana
-      - monitoring
-      # - kube-dashboard
-      # - kube-metrics
-      - kube-policy
-      - kube-system
-      - logging
-      # - mariadb
-      # - olm
-      # - operators
 
     # Deploy a generate policy for kyverno to create Role and RoleBindings
     # for the prometheus service account so it can monitor
