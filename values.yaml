@@ -308,7 +308,7 @@ nfc_monitoring:
     # Deploy a generate policy for kyverno to create Role and RoleBindings
     # for the prometheus service account so it can monitor
     # new/existing namespaces
-    kyverno_role_policy: true
+    kyverno_role_policy: false
 
     storage:
       volumeClaimTemplate:
