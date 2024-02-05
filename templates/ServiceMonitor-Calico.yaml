@@ -36,3 +36,4 @@ spec:
       k8s-app: calico-node
 
 {{- end -}}
+{{ end }}
