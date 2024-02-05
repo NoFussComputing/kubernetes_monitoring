@@ -22,6 +22,8 @@ spec:
       sourceLabels:
       - __meta_kubernetes_pod_name
       targetLabel: instance
+    - targetLabel: "job"
+      replacement: "prometheus"
   - interval: 30s
     port: reloader-web
   selector:
