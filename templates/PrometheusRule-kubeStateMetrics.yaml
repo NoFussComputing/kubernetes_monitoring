@@ -1,14 +1,16 @@
+{{ if .Values.nfc_monitoring.kube_state_metrics.enabled }}
 ---
 apiVersion: monitoring.coreos.com/v1
 kind: PrometheusRule
 metadata:
   labels:
     app.kubernetes.io/component: exporter
+    app.kubernetes.io/instance: {{ $.Release.Name }}
     app.kubernetes.io/name: kube-state-metrics
     app.kubernetes.io/part-of: {{ $.Chart.Name }}
     app.kubernetes.io/version: {{ $.Chart.Version }}
     app.kubernetes.io/managed-by: {{ $.Release.Service }}
-    prometheus: k8s
+    prometheus: {{ $.Release.Name }}
     role: alert-rules
   name: kube-state-metrics-rules
   namespace: {{ .Values.nfc_monitoring.prometheus.namespace }}
@@ -65,3 +67,5 @@ spec:
       for: 15m
       labels:
         severity: critical
+
+{{ end }}

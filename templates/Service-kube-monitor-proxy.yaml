@@ -1,3 +1,4 @@
+{{ if .Values.nfc_monitoring.kube_monitor_proxy.enabled }}
 ---
 apiVersion: v1
 kind: Service
@@ -6,7 +7,7 @@ metadata:
   namespace: monitoring
   labels:
     app.kubernetes.io/component: proxy
-    app.kubernetes.io/instance: k8s
+    app.kubernetes.io/instance: {{ $.Release.Name }}
     app.kubernetes.io/name: kube-monitor-proxy
     app.kubernetes.io/managed-by: {{ $.Release.Service }}
     app.kubernetes.io/part-of: {{ $.Chart.Name }}
@@ -16,7 +17,7 @@ metadata:
 spec:
   selector:
     app.kubernetes.io/component: proxy
-    app.kubernetes.io/instance: k8s
+    app.kubernetes.io/instance: {{ $.Release.Name }}
     app.kubernetes.io/name: kube-monitor-proxy
     app.kubernetes.io/part-of: {{ $.Chart.Name }}
     
@@ -28,3 +29,5 @@ spec:
       port: 10259
       targetPort: kube-scheduler
   sessionAffinity: ClientIP
+
+{{ end }}

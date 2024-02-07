@@ -1,10 +1,12 @@
 ---
 {{- if eq .Values.nfc_monitoring.kubernetes.networking "calico" -}}
+{{ if .Values.nfc_monitoring.prometheus.service_monitor.calico }}
 
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
   labels:
+    app.kubernetes.io/instance: {{ $.Release.Name }}
     app.kubernetes.io/name: calico
     app.kubernetes.io/component: networking
     app.kubernetes.io/part-of: {{ $.Chart.Name }}
@@ -12,7 +14,7 @@ metadata:
     app.kubernetes.io/managed-by: {{ $.Release.Service }}
     k8s-app: calico-node
   name: calico
-  namespace: kube-system
+  namespace: calico-system
 spec:
   endpoints:
   - bearerTokenFile: /var/run/secrets/kubernetes.io/serviceaccount/token
@@ -34,3 +36,4 @@ spec:
       k8s-app: calico-node
 
 {{- end -}}
+{{ end }}

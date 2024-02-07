@@ -1,14 +1,16 @@
+{{ if .Values.nfc_monitoring.kube_monitor_proxy.enabled }}
 ---
 apiVersion: monitoring.coreos.com/v1
 kind: PrometheusRule
 metadata:
   labels:
     app.kubernetes.io/component: exporter
+    app.kubernetes.io/instance: {{ $.Release.Name }}
     app.kubernetes.io/name: kube-prometheus
     app.kubernetes.io/part-of: {{ $.Chart.Name }}
     app.kubernetes.io/version: {{ $.Chart.Version }}
     app.kubernetes.io/managed-by: {{ $.Release.Service }}
-    prometheus: k8s
+    prometheus: {{ $.Release.Name }}
     role: alert-rules
   name: kube-prometheus-rules
   namespace: {{ .Values.nfc_monitoring.prometheus.namespace }}
@@ -25,33 +27,6 @@ spec:
       for: 10m
       labels:
         severity: warning
-    - alert: Watchdog
-      annotations:
-        description: |
-          This is an alert meant to ensure that the entire alerting pipeline is functional.
-          This alert is always firing, therefore it should always be firing in Alertmanager
-          and always fire against a receiver. There are integrations with various notification
-          mechanisms that send a notification when this alert is not firing. For example the
-          "DeadMansSnitch" integration in PagerDuty.
-        runbook_url: https://runbooks.prometheus-operator.dev/runbooks/general/watchdog
-        summary: An alert that should always be firing to certify that Alertmanager is working properly.
-      expr: vector(1)
-      labels:
-        severity: none
-    - alert: InfoInhibitor
-      annotations:
-        description: |
-          This is an alert that is used to inhibit info alerts.
-          By themselves, the info-level alerts are sometimes very noisy, but they are relevant when combined with
-          other alerts.
-          This alert fires whenever there's a severity="info" alert, and stops firing when another alert with a
-          severity of 'warning' or 'critical' starts firing on the same namespace.
-          This alert should be routed to a null receiver and configured to inhibit alerts with severity="info".
-        runbook_url: https://runbooks.prometheus-operator.dev/runbooks/general/infoinhibitor
-        summary: Info-level alert inhibition.
-      expr: ALERTS{severity = "info"} == 1 unless on(namespace) ALERTS{alertname != "InfoInhibitor", severity =~ "warning|critical", alertstate="firing"} == 1
-      labels:
-        severity: none
   - name: node-network
     rules:
     - alert: NodeNetworkInterfaceFlapping
@@ -84,3 +59,5 @@ spec:
       record: count:up1
     - expr: count without(instance, pod, node) (up == 0)
       record: count:up0
+
+{{ end }}

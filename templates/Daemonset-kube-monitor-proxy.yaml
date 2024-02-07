@@ -1,10 +1,11 @@
+{{ if .Values.nfc_monitoring.kube_monitor_proxy.enabled }}
 ---
 apiVersion: apps/v1
 kind: DaemonSet
 metadata:
   labels:
     app.kubernetes.io/component: proxy
-    app.kubernetes.io/instance: k8s
+    app.kubernetes.io/instance: {{ $.Release.Name }}
     app.kubernetes.io/name: kube-monitor-proxy
     app.kubernetes.io/managed-by: {{ $.Release.Service }}
     app.kubernetes.io/part-of: {{ $.Chart.Name }}
@@ -19,7 +20,7 @@ spec:
   selector:
     matchLabels:
       app.kubernetes.io/component: proxy
-      app.kubernetes.io/instance: k8s
+      app.kubernetes.io/instance: {{ $.Release.Name }}
       app.kubernetes.io/name: kube-monitor-proxy
       app.kubernetes.io/managed-by: {{ $.Release.Service }}
       app.kubernetes.io/part-of: {{ $.Chart.Name }}
@@ -28,7 +29,7 @@ spec:
     metadata:
       labels:
         app.kubernetes.io/component: proxy
-        app.kubernetes.io/instance: k8s
+        app.kubernetes.io/instance: {{ $.Release.Name }}
         app.kubernetes.io/name: kube-monitor-proxy
         app.kubernetes.io/managed-by: {{ $.Release.Service }}
         app.kubernetes.io/part-of: {{ $.Chart.Name }}
@@ -134,3 +135,5 @@ spec:
       serviceAccountName: kube-monitor-proxy
       tolerations:
       - operator: Exists
+
+{{ end }}

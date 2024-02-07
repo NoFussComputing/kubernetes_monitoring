@@ -4,10 +4,11 @@ kind: Prometheus
 metadata:
   labels:
     {{ toYaml $.Values.nfc_monitoring.prometheus.labels | nindent 4 }}
+    app.kubernetes.io/instance: {{ $.Release.Name }}
     app.kubernetes.io/part-of: {{ $.Chart.Name }}
     app.kubernetes.io/managed-by: {{ $.Release.Service }}
     app.kubernetes.io/version: {{ $.Chart.Version }}
-  name: k8s
+  name: {{ $.Release.Name }}
   namespace: "{{ .Values.nfc_monitoring.prometheus.namespace }}"
 spec:
   affinity:
@@ -15,17 +16,18 @@ spec:
   alerting:
     alertmanagers:
     - apiVersion: v2
-      name: alertmanager-main
+      name: alertmanager-{{ $.Release.Name }}
       namespace: "{{ .Values.nfc_monitoring.alert_manager.namespace }}"
       port: web
   enableFeatures: []
   externalLabels: {}
-  image: quay.io/prometheus/prometheus:v2.42.0
+  image: {{ .Values.nfc_monitoring.prometheus.image.name }}:{{ .Values.nfc_monitoring.prometheus.image.tag}}
   nodeSelector:
     kubernetes.io/os: linux
   podMetadata:
     labels:
       {{ toYaml $.Values.nfc_monitoring.prometheus.labels | nindent 6 }}
+      app.kubernetes.io/instance: {{ $.Release.Name }}
       app.kubernetes.io/part-of: {{ $.Chart.Name }}
       app.kubernetes.io/managed-by: {{ $.Release.Service }}
       app.kubernetes.io/version: {{ $.Chart.Version }}
@@ -33,7 +35,11 @@ spec:
   podMonitorSelector: {}
   probeNamespaceSelector: {}
   probeSelector: {}
-  replicas: 3
+  {{ if .Values.nfc_monitoring.prometheus.remotewrite }}
+  remoteWrite: {{ .Values.nfc_monitoring.prometheus.remotewrite | toYaml | nindent 4 }}
+
+  {{- end }}
+  replicas: {{ $.Values.nfc_monitoring.prometheus.replicas }}
   resources:
     requests:
       memory: 400Mi
@@ -42,17 +48,19 @@ spec:
     fsGroup: 2000
     runAsNonRoot: true
     runAsUser: 1000
-  serviceAccountName: prometheus-k8s
+  serviceAccountName: prometheus-{{ $.Release.Name }}
   serviceMonitorNamespaceSelector: {}
   serviceMonitorSelector: {}
   storage:
     {{- toYaml .Values.nfc_monitoring.prometheus.storage | nindent 4 }}
   {{ if .Values.nfc_monitoring.thanos.sidecar.enabled }}
+  {{ if .Values.nfc_monitoring.thanos.sidecar.config }}
   thanos:
     image: "{{ .Values.nfc_monitoring.thanos.image.name }}:{{ .Values.nfc_monitoring.thanos.image.tag }}"
     objectStorageConfig:
       key: thanos.yaml
       name: thanos-sidecar-config
+  {{ end }}
   {{ end }}
   version: 2.42.0
   {{ if .Values.nfc_monitoring.prometheus.additional }}

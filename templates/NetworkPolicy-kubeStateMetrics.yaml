@@ -1,31 +1,37 @@
-# apiVersion: networking.k8s.io/v1
-# kind: NetworkPolicy
-# metadata:
-#   labels:
-#     app.kubernetes.io/component: exporter
-#     app.kubernetes.io/name: kube-state-metrics
-#     app.kubernetes.io/part-of: kube-prometheus
-#     app.kubernetes.io/version: 2.8.1
-#   name: kube-state-metrics
-#   namespace: monitoring
-# spec:
-#   egress:
-#   - {}
-#   ingress:
-#   - from:
-#     - podSelector:
-#         matchLabels:
-#           app.kubernetes.io/name: prometheus
-#     ports:
-#     - port: 8443
-#       protocol: TCP
-#     - port: 9443
-#       protocol: TCP
-#   podSelector:
-#     matchLabels:
-#       app.kubernetes.io/component: exporter
-#       app.kubernetes.io/name: kube-state-metrics
-#       app.kubernetes.io/part-of: kube-prometheus
-#   policyTypes:
-#   - Egress
-#   - Ingress
+{{ if .Values.nfc_monitoring.kube_state_metrics.enabled }}
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  labels:
+    app.kubernetes.io/component: exporter
+    app.kubernetes.io/instance: {{ $.Release.Name }}
+    app.kubernetes.io/name: kube-state-metrics
+    app.kubernetes.io/part-of: kube-prometheus
+    app.kubernetes.io/version: 2.8.1
+  name: kube-state-metrics
+  namespace: monitoring
+spec:
+  egress:
+  - {}
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app.kubernetes.io/name: prometheus
+    ports:
+    - port: 8443
+      protocol: TCP
+    - port: 9443
+      protocol: TCP
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/component: exporter
+      app.kubernetes.io/instance: {{ $.Release.Name }}
+      app.kubernetes.io/name: kube-state-metrics
+      app.kubernetes.io/part-of: kube-prometheus
+  policyTypes:
+  - Egress
+  - Ingress
+
+{{ end }}

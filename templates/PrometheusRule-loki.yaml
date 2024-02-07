@@ -1,15 +1,17 @@
 ---
 {{- if .Values.nfc_monitoring.loki.enabled | default false -}}
+{{ if .Values.nfc_monitoring.loki.config }}
 apiVersion: monitoring.coreos.com/v1
 kind: PrometheusRule
 metadata:
   labels:
     app.kubernetes.io/component: logging
+    app.kubernetes.io/instance: {{ $.Release.Name }}
     app.kubernetes.io/name: loki
     app.kubernetes.io/part-of: {{ $.Chart.Name }}
     app.kubernetes.io/version: {{ $.Chart.Version }}
     app.kubernetes.io/managed-by: {{ $.Release.Service }}
-    prometheus: k8s
+    prometheus: {{ $.Release.Name }}
     role: alert-rules
   name: loki
   namespace: {{ .Values.nfc_monitoring.prometheus.namespace }}
@@ -109,4 +111,5 @@ spec:
       labels:
         severity: warning
 
+{{ end }}
 {{- end -}}

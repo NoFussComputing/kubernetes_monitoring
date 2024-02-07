@@ -4,10 +4,11 @@ kind: Alertmanager
 metadata:
   labels:
     {{ toYaml $.Values.nfc_monitoring.alert_manager.labels | nindent 4 }}
+    app.kubernetes.io/instance: {{ $.Release.Name }}
     app.kubernetes.io/part-of: {{ $.Chart.Name }}
     app.kubernetes.io/managed-by: {{ $.Release.Service }}
     app.kubernetes.io/version: {{ $.Chart.Version }}
-  name: main
+  name: {{ $.Release.Name }}
   namespace: {{ .Values.nfc_monitoring.alert_manager.namespace | quote }}
 spec:
   image: "{{ .Values.nfc_monitoring.alert_manager.image.name }}:{{ .Values.nfc_monitoring.alert_manager.image.tag }}"
@@ -16,12 +17,12 @@ spec:
   podMetadata:
     labels:
       app.kubernetes.io/component: alert-router
-      app.kubernetes.io/instance: main
+      app.kubernetes.io/instance: {{ $.Release.Name }}
       app.kubernetes.io/name: alertmanager
       app.kubernetes.io/part-of: {{ $.Chart.Name }}
       app.kubernetes.io/managed-by: {{ $.Release.Service }}
       app.kubernetes.io/version: {{ $.Chart.Version }}
-  replicas: 3
+  replicas: {{ .Values.nfc_monitoring.alert_manager.replicas }}
   resources:
     limits:
       cpu: 100m

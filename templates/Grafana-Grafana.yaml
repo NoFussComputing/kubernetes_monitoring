@@ -1,9 +1,11 @@
 ---
+{{ if .Values.nfc_monitoring.grafana.enabled -}}
 apiVersion: grafana.integreatly.org/v1beta1
 kind: Grafana
 metadata:
   labels:
     {{ toYaml $.Values.nfc_monitoring.grafana.labels | nindent 4 }}
+    app.kubernetes.io/instance: {{ $.Release.Name }}
     app.kubernetes.io/managed-by: {{ $.Release.Service }}
     app.kubernetes.io/part-of: {{ $.Chart.Name }}
     app.kubernetes.io/version: {{ $.Chart.Version }}
@@ -16,6 +18,7 @@ spec:
     metadata:
       labels:
         {{ toYaml $.Values.nfc_monitoring.grafana.labels | nindent 8 }}
+        app.kubernetes.io/instance: {{ $.Release.Name }}
         app.kubernetes.io/managed-by: {{ $.Release.Service }}
         app.kubernetes.io/part-of: {{ $.Chart.Name }}
         app.kubernetes.io/version: {{ $.Chart.Version }}
@@ -24,6 +27,7 @@ spec:
       selector:
         matchLabels:
           {{ toYaml $.Values.nfc_monitoring.grafana.labels | nindent 10 }}
+          app.kubernetes.io/instance: {{ $.Release.Name }}
           app.kubernetes.io/managed-by: {{ $.Release.Service }}
           app.kubernetes.io/part-of: {{ $.Chart.Name }}
       strategy:
@@ -34,6 +38,7 @@ spec:
         metadata:
           labels:
             {{ toYaml $.Values.nfc_monitoring.grafana.labels | nindent 12 }}
+            app.kubernetes.io/instance: {{ $.Release.Name }}
             app.kubernetes.io/managed-by: {{ $.Release.Service }}
             app.kubernetes.io/part-of: {{ $.Chart.Name }}
             app.kubernetes.io/version: {{ $.Chart.Version }}
@@ -91,7 +96,7 @@ spec:
                 name: dashboards
           
           - image: "{{ .Values.nfc_monitoring.additions.dashboard_sidecar.image.name }}:{{ .Values.nfc_monitoring.additions.dashboard_sidecar.image.tag}}"
-            name: k8s-sidecar
+            name: sidecar
             env:
               - name: LABEL
                 value: "{{ .Values.nfc_monitoring.additions.dashboard_sidecar.label_name }}"
@@ -147,3 +152,5 @@ spec:
       resources:
         requests:
           storage: "5Gi"
+
+{{- end }}

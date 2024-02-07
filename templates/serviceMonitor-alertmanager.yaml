@@ -1,9 +1,11 @@
+{{ if .Values.nfc_monitoring.alert_manager.enabled -}}
 ---
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
   labels:
     {{ toYaml $.Values.nfc_monitoring.alert_manager.labels | nindent 4 }}
+    app.kubernetes.io/instance: {{ $.Release.Name }}
     app.kubernetes.io/part-of: {{ $.Chart.Name }}
     app.kubernetes.io/managed-by: {{ $.Release.Service }}
     app.kubernetes.io/version: {{ $.Chart.Version }}
@@ -14,12 +16,30 @@ spec:
   endpoints:
   - interval: 30s
     port: web
+    relabelings:
+    - action: replace
+      regex: (.*)
+      replacement: $1
+      sourceLabels:
+      - __meta_kubernetes_pod_name
+      targetLabel: instance
   - interval: 30s
     port: reloader-web
+    relabelings:
+    - action: replace
+      regex: (.*)
+      replacement: $1
+      sourceLabels:
+      - __meta_kubernetes_pod_name
+      targetLabel: instance
+    
   namespaceSelector:
     matchNames:
     - "{{ .Values.nfc_monitoring.alert_manager.namespace }}"
   selector:
     matchLabels:
       {{ toYaml $.Values.nfc_monitoring.alert_manager.labels | nindent 6 }}
+      app.kubernetes.io/instance: {{ $.Release.Name }}
       app.kubernetes.io/part-of: {{ $.Chart.Name }}
+
+{{ end }}

@@ -4,10 +4,11 @@ kind: Service
 metadata:
   labels:
     {{ toYaml $.Values.nfc_monitoring.alert_manager.labels | nindent 4 }}
+    app.kubernetes.io/instance: {{ $.Release.Name }}
     app.kubernetes.io/part-of: {{ $.Chart.Name }}
     app.kubernetes.io/managed-by: {{ $.Release.Service }}
     app.kubernetes.io/version: {{ $.Chart.Version }}
-  name: alertmanager-main
+  name: alertmanager-{{ $.Release.Name }}
   namespace: {{ .Values.nfc_monitoring.alert_manager.namespace | quote }}
 spec:
   ports:
@@ -19,7 +20,7 @@ spec:
     targetPort: reloader-web
   selector:
     app.kubernetes.io/component: alert-router
-    app.kubernetes.io/instance: main
+    app.kubernetes.io/instance: {{ $.Release.Name }}
     app.kubernetes.io/name: alertmanager
     app.kubernetes.io/part-of: {{ $.Chart.Name }}
   sessionAffinity: ClientIP

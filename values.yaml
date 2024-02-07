@@ -12,35 +12,27 @@ nfc_monitoring:
 
 
   alert_manager:
+
+    enabled: true 
     image: 
       name: quay.io/prometheus/alertmanager
       tag: 'v0.26.0'
+
+    # How many replicas to deploy
+    replicas: 1
 
 
     ingress:
       annotations:
         cert-manager.io/cluster-issuer: "selfsigned-issuer"
         nginx.ingress.kubernetes.io/ssl-redirect: "true"
-      # enabled: false # Optional, boolean.
-      spec:
-        tls:
-          - hosts:
-              - alert-manager.local
-            secretName: certificate-tls-alert-manager
-        rules:
-          - host:  alert-manager.local
-            http:
-              paths:
-                - path: /
-                  pathType: Prefix
-                  backend:
-                    service:
-                      name: alertmanager-main
-                      port:
-                        name: web
+      
+      enabled: false
+
+      hostname: alert-manager.local
+
     
     labels:
-      app.kubernetes.io/instance: main
       app.kubernetes.io/component: alert-router
       app.kubernetes.io/name: alertmanager
 
@@ -48,6 +40,11 @@ nfc_monitoring:
 
 
   grafana:
+
+    dashboards:
+      cert_manager: false
+
+    enabled: false
 
     # Grafana Configuration
     # Type: Dict
@@ -72,33 +69,20 @@ nfc_monitoring:
 
     image: 
       name: grafana/grafana
-      tag: '10.1.2' # '10.0.5'
+      tag: '10.3.1' # '10.0.5'
 
     ingress:
       annotations:
         cert-manager.io/cluster-issuer: "selfsigned-issuer"
         nginx.ingress.kubernetes.io/ssl-redirect: "true"
-      # enabled: false # Optional, boolean.
-      spec:
-        tls:
-          - hosts:
-              - grafana.local
-            secretName: certificate-tls-grafana
-        rules:
-          - host:  grafana.local
-            http:
-              paths:
-                - path: /
-                  pathType: Prefix
-                  backend:
-                    service:
-                      name: grafana
-                      port:
-                        name: grafana-http
+      
+      enabled: true
+      
+      hostname:  grafana.local
+
 
     labels:
       app.kubernetes.io/component: graphing
-      app.kubernetes.io/instance: k8s
       app.kubernetes.io/name: grafana
 
     namespace: grafana
@@ -195,12 +179,14 @@ nfc_monitoring:
 
 
   grafana_agent:
+
+    enabled: true 
+
     image: 
       name: grafana/agent
-      tag: 'v0.36.1'
+      tag: 'v0.39.2'
 
     labels:
-      app.kubernetes.io/instance: k8s
       app.kubernetes.io/component: exporter
       app.kubernetes.io/name: grafana-agent
 
@@ -217,9 +203,11 @@ nfc_monitoring:
 
     namespace: logging
 
+    # If no config is setup, logging will not be enabled.
+    config: {}
     # service name and port are used for the connection to your loki instance
-    service_name: loki-gateway
-    service_port: 80
+    # service_name: loki-gateway
+    # service_port: 80
 
     ServiceMonitor:
       selector:
@@ -229,10 +217,12 @@ nfc_monitoring:
 
 
   kube_monitor_proxy:
+    enabled: false
     namespace: monitoring
 
 
   kube_rbac_proxy:
+
     # This image is used as part of kube-monitor-proxy.
     image: 
       name: quay.io/brancz/kube-rbac-proxy
@@ -240,6 +230,8 @@ nfc_monitoring:
 
 
   kube_state_metrics:
+
+    enabled: false
     image: 
       name: registry.k8s.io/kube-state-metrics/kube-state-metrics
       tag: 'v2.8.1'
@@ -250,34 +242,42 @@ nfc_monitoring:
 
     image:
       name: prom/prometheus
-      tag: 'v2.47.0'
+      tag: 'v2.49.0'
+
+    # How many replicas to deploy
+    replicas: 1
+
+    # alertmanagers:
+    #   - name: 
+
+    # Configure prometheus to write metrics to remote host
+    # below example config uses a secret named "prometheus-remote-write" with two keys username and password.
+    # Documentation: https://prometheus-operator.dev/docs/operator/api/#monitoring.coreos.com/v1.RemoteWriteSpec
+    remotewrite: {}
+      # url:
+      # name:
+      # remoteTimeout: 30
+      # writeRelabelConfigs:
+      # basicAuth:
+      #   username:
+      #     name: prometheus-remote-write
+      #     key: username
+      #   password:
+      #     name: prometheus-remote-write
+      #     key: password
+
 
     ingress:
       annotations:
         cert-manager.io/cluster-issuer: "selfsigned-issuer"
         nginx.ingress.kubernetes.io/ssl-redirect: "true"
-      # enabled: false # Optional, boolean.
-      spec:
-        tls:
-          - hosts:
-              - prometheus.local
-            secretName: certificate-tls-prometheus
-        rules:
-          - host:  prometheus.local
-            http:
-              paths:
-                - path: /
-                  pathType: Prefix
-                  backend:
-                    service:
-                      name: prometheus-k8s
-                      port:
-                        name: web
+      enabled: true
+      hostname:  prometheus.local
+
     
     # These labels are appended to all Prometheus items and are also the selector labels
     labels:
       app.kubernetes.io/component: prometheus
-      app.kubernetes.io/instance: k8s
       app.kubernetes.io/name: prometheus
 
     namespace: monitoring
@@ -307,28 +307,11 @@ nfc_monitoring:
             topologyKey: kubernetes.io/hostname
           weight: 10
 
-    # List of namespaces that prometheus is to monitor
-    # used to create Roles and RoleBindings
-    # type: list
-    monitor_namespaces:
-      - alerting
-      - default
-      # - ceph
-      - grafana
-      - monitoring
-      # - kube-dashboard
-      # - kube-metrics
-      - kube-policy
-      - kube-system
-      - logging
-      # - mariadb
-      # - olm
-      # - operators
 
     # Deploy a generate policy for kyverno to create Role and RoleBindings
     # for the prometheus service account so it can monitor
     # new/existing namespaces
-    kyverno_role_policy: true
+    kyverno_role_policy: false
 
     storage:
       volumeClaimTemplate:
@@ -344,18 +327,29 @@ nfc_monitoring:
     # Type: dict
     additional:
 
+      # Don't declare remoteWrite Here, as it's don at path .prometheus.remote_write
       # remoteWrite: 
-      #   - name: mimir
-      #     url: http://mimir-gateway.metrics.svc.cluster.local/api/v1/push
 
       retention: 24h
-      retentionSize: 20GB
+      retentionSize: 2GB
       ruleSelector:
         matchLabels:
           role: alert-rules
 
+    service_monitor:
+      apiserver: false
+      cadvisor: false
+      calico: false
+      ceph: false
+      coredns: false
+      kube_controller_manager: false
+      kubelet: false
+      kube_scheduler: false
+
 
   prometheus_adaptor:
+
+    enalbed: false
 
     image:
       name: registry.k8s.io/prometheus-adapter/prometheus-adapter
@@ -363,7 +357,6 @@ nfc_monitoring:
 
     labels:
       app.kubernetes.io/component: metrics-adapter
-      app.kubernetes.io/instance: main
       app.kubernetes.io/name: prometheus-adapter
 
     namespace: monitoring
@@ -404,22 +397,23 @@ nfc_monitoring:
     sidecar:
 
       enabled: true
-
-      config:
-        type: S3
-        config:
-          bucket: "thanos-metrics"
-          endpoint: "rook-ceph-rgw-earth.ceph.svc:80"
-          access_key: "7J5NM2MNCDB4T4Y9OKJ5"
-          secret_key: "t9r69RzZdWEBL3NCKiUIpDk6j5625xc6HucusiGG"
-          insecure: true
+      
+      # Config must be specified for the sidecar to deploy
+      config: {}
+      #   type: S3
+      #   config:
+      #     bucket: "thanos-metrics"
+      #     endpoint: "rook-ceph-rgw-earth.ceph.svc:80"
+      #     access_key: "7J5NM2MNCDB4T4Y9OKJ5"
+      #     secret_key: "t9r69RzZdWEBL3NCKiUIpDk6j5625xc6HucusiGG"
+      #     insecure: true
 
 
   additions:
 
     ceph:
 
-      enabled: true
+      enabled: false
 
       namespace: ceph
 
@@ -434,7 +428,7 @@ nfc_monitoring:
     # Add sidecar to grafana pod to load dashboards from configMap
     dashboard_sidecar: 
       
-      enabled: true
+      enabled: false
 
       image:
         name: ghcr.io/kiwigrid/k8s-sidecar
@@ -446,278 +440,7 @@ nfc_monitoring:
 
   network_policy:
     
-    enabled: true
-
-    # Network Policies to apply. These policies are automagically build using the values below.
-    # What you would find under path root.spec belongs here.
-    # 
-    # Do:
-    #   - Define 'Ingress'
-    #   - Define 'Egress'
-    #   - Ensure that the name matches the item name from values.yaml. i.e. nfc_monitoring.{item_name}
-    #     for prometheus the item name is 'prometheus'. This value is used to select items pertaining to
-    #     that item from values.yaml. for example the labels and namespace.
-    # Dont:
-    #   - Define 'podSelector' as this is alreaady included using the selector labels
-    policies:
-
-### SoF Network Policy: Prometheus ###
-
-      - name: prometheus
-        policy:
-          egress: # ToDo: add further restrictions to egress. is variable lookup possible to obtain values????
-              # - {}
-            - to: # Alert Manager
-                - namespaceSelector:
-                    matchLabels:
-                      kubernetes.io/metadata.name: alerting
-                  podSelector:
-                    matchLabels:
-                      app.kubernetes.io/instance: main
-                      app.kubernetes.io/component: alert-router
-                      app.kubernetes.io/name: alertmanager
-              ports:
-                - port: 9093
-                  protocol: TCP
-
-            - to: # Ceph
-                - ipBlock:
-                    cidr: 172.16.10.0/24
-              ports:
-                - port: 9283
-                  protocol: TCP
-
-            - to: # Grafana
-                - namespaceSelector:
-                    matchLabels:
-                      kubernetes.io/metadata.name: grafana
-                  podSelector:
-                    matchLabels:
-                      app.kubernetes.io/component: graphing
-                      app.kubernetes.io/instance: k8s
-                      app.kubernetes.io/name: grafana
-              ports:
-                - port: 3000
-                  protocol: TCP
-
-            - to: # Grafana Agent
-                - namespaceSelector:
-                    matchLabels:
-                      kubernetes.io/metadata.name: monitoring
-                  podSelector:
-                    matchLabels:
-                      app.kubernetes.io/instance: k8s
-                      app.kubernetes.io/component: exporter
-                      app.kubernetes.io/name: grafana-agent
-              ports:
-                - port: 12345
-                  protocol: TCP
-
-            - to: # Kube DNS
-                - namespaceSelector:
-                    matchLabels:
-                      kubernetes.io/metadata.name: kube-system
-                  podSelector:
-                    matchLabels:
-                      k8s-app: kube-dns
-              ports:
-                - port: 53
-                  protocol: TCP
-                - port: 53
-                  protocol: UDP
-
-            - to:
-                - podSelector:
-                    matchLabels:
-                      app.kubernetes.io/name: prometheus
-                  # namespaceSelector:
-                  #   matchLabels:
-                  #     kubernetes.io/metadata.name: monitoiring
-                - namespaceSelector:
-                    matchLabels:
-                      kubernetes.io/metadata.name: metrics
-              ports: []
-
-            - {} # ToDo: Temp rule: Allow All. this rule MUST be removed when egress has been refactored
-
-          ingress: 
-
-            - from:
-                - podSelector:
-                    matchLabels:
-                      app.kubernetes.io/name: prometheus
-                  # namespaceSelector:
-                  #   matchLabels:
-                  #     kubernetes.io/metadata.name: monitoiring
-                - namespaceSelector:
-                    matchLabels:
-                      kubernetes.io/metadata.name: metrics
-              ports: []
-                # - port: 8080
-                #   protocol: TCP
-                # - port: 9090
-                #   protocol: TCP
-                # - port: 10901
-                #   protocol: TCP
-
-            - from:
-                - podSelector:
-                    matchLabels:
-                      app.kubernetes.io/name: grafana
-                  namespaceSelector:
-                    matchLabels:
-                      kubernetes.io/metadata.name: grafana
-                - podSelector:
-                    matchLabels:
-                      app.kubernetes.io/name: prometheus-adapter
-                  namespaceSelector:
-                    matchLabels:
-                      kubernetes.io/metadata.name: monitoring
-              ports:
-                - port: 9090
-                  protocol: TCP
-
-            - from: []
-              ports: []
-
-          policyTypes:
-          - Egress
-          - Ingress
-
-### SoF Network Policy: Grafana ###
-
-      - name: grafana
-        policy:
-            egress:
-
-              - to:
-                  - namespaceSelector:
-                      matchLabels:
-                        kubernetes.io/metadata.name: alerting
-                    podSelector:
-                      matchLabels:
-                        app.kubernetes.io/instance: main
-                        app.kubernetes.io/component: alert-router
-                        app.kubernetes.io/name: alertmanager
-                ports:
-                  - port: 9093
-                    protocol: TCP
-
-              - to:
-                  - namespaceSelector:
-                      matchLabels:
-                        kubernetes.io/metadata.name: logging
-                    podSelector:
-                      matchLabels:
-                        app.kubernetes.io/component: gateway
-                        app.kubernetes.io/instance: loki
-                        app.kubernetes.io/name: loki
-                ports:
-                  - port: 80       # Service Port
-                    protocol: TCP
-                  - port: 8080     # Pod Port
-                    protocol: TCP
-
-              - to:
-                  - namespaceSelector:
-                      matchLabels:
-                        kubernetes.io/metadata.name: monitoring
-                    podSelector:
-                      matchLabels:
-                        app.kubernetes.io/component: prometheus
-                        app.kubernetes.io/instance: k8s
-                        app.kubernetes.io/name: prometheus
-                  - namespaceSelector:
-                      matchLabels:
-                        kubernetes.io/metadata.name: metrics
-                    podSelector:
-                      matchLabels:
-                        app.kubernetes.io/component: query-layer
-                        app.kubernetes.io/instance: thanos-query
-                        app.kubernetes.io/name: thanos-query
-                ports:
-                  - port: 9090
-                    protocol: TCP
-
-              - to: [] # Requires internet access for plugins and dashboard downloading
-                ports:
-                  - port: 443
-                    protocol: TCP
-
-              - to: # Kube DNS
-                  - namespaceSelector:
-                      matchLabels:
-                        kubernetes.io/metadata.name: kube-system
-                    podSelector:
-                      matchLabels:
-                        k8s-app: kube-dns
-                ports:
-                  - port: 53
-                    protocol: TCP
-                  - port: 53
-                    protocol: UDP
-
-            ingress:
-
-              - from: []
-                ports:
-                  - port: 3000
-                    protocol: TCP
-            policyTypes:
-              - Egress
-              - Ingress
-
-### SoF Network Policy: Grafana Agent ###
-
-      - name: grafana_agent
-        policy:
-          egress:
-
-            - to: # Logging
-                - namespaceSelector:
-                    matchLabels:
-                      kubernetes.io/metadata.name: logging
-                  podSelector:
-                    matchLabels:
-                      app.kubernetes.io/component: gateway
-                      app.kubernetes.io/instance: loki
-                      app.kubernetes.io/name: loki
-              ports:
-                - port: 80
-                  protocol: TCP
-
-            - to: # Kube DNS
-                - namespaceSelector:
-                    matchLabels:
-                      kubernetes.io/metadata.name: kube-system
-                  podSelector:
-                    matchLabels:
-                      k8s-app: kube-dns
-              ports:
-                - port: 53
-                  protocol: TCP
-                - port: 53
-                  protocol: UDP
-
-          ingress:
-
-            - from: 
-                - namespaceSelector:
-                    matchLabels:
-                      kubernetes.io/metadata.name: monitoring
-                  podSelector:
-                    matchLabels:
-                      app.kubernetes.io/component: prometheus
-                      app.kubernetes.io/instance: k8s
-                      app.kubernetes.io/name: prometheus
-              ports:
-                - port: 12345
-                  protocol: TCP
-
-          policyTypes:
-          - Egress
-          - Ingress
-
+    enabled: false
 
 
 loki_instance:

@@ -1,3 +1,4 @@
+{{ if .Values.nfc_monitoring.grafana.enabled -}}
 {{ if .Values.nfc_monitoring.additions.dashboard_sidecar.enabled -}}
 ---
 # Provisioning config
@@ -6,6 +7,7 @@ kind: ConfigMap
 metadata:
   labels:
     {{ toYaml $.Values.nfc_monitoring.grafana.labels | nindent 4 }}
+    app.kubernetes.io/instance: {{ $.Release.Name }}
     app.kubernetes.io/managed-by: {{ $.Release.Service }}
     app.kubernetes.io/part-of: {{ $.Chart.Name }}
     app.kubernetes.io/version: {{ $.Chart.Version }}
@@ -26,4 +28,5 @@ data:
         options:
           path: /var/lib/grafana/dashboards
           foldersFromFilesStructure: true
+{{- end }}
 {{- end }}

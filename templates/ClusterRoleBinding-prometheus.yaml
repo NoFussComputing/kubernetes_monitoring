@@ -4,15 +4,16 @@ kind: ClusterRoleBinding
 metadata:
   labels:
     {{ toYaml $.Values.nfc_monitoring.prometheus.labels | nindent 4 }}
+    app.kubernetes.io/instance: {{ $.Release.Name }}
     app.kubernetes.io/part-of: {{ $.Chart.Name }}
     app.kubernetes.io/managed-by: {{ $.Release.Service }}
     app.kubernetes.io/version: {{ $.Chart.Version }}
-  name: prometheus-k8s
+  name: prometheus-{{ $.Release.Name }}
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
-  name: prometheus-k8s
+  name: prometheus-{{ $.Release.Name }}
 subjects:
 - kind: ServiceAccount
-  name: prometheus-k8s
+  name: prometheus-{{ $.Release.Name }}
   namespace: {{ .Values.nfc_monitoring.prometheus.namespace }}

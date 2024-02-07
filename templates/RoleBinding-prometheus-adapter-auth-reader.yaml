@@ -4,6 +4,7 @@ kind: RoleBinding
 metadata:
   labels:
     {{ toYaml $.Values.nfc_monitoring.prometheus_adaptor.labels | nindent 4 }}
+    app.kubernetes.io/instance: {{ $.Release.Name }}
     app.kubernetes.io/version: 0.11.1
   name: resource-metrics-auth-reader
   namespace: kube-system

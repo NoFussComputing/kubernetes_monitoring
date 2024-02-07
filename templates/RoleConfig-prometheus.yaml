@@ -4,10 +4,11 @@ kind: Role
 metadata:
   labels:
     {{ toYaml $.Values.nfc_monitoring.prometheus.labels | nindent 4 }}
+    app.kubernetes.io/instance: {{ $.Release.Name }}
     app.kubernetes.io/part-of: {{ $.Chart.Name }}
     app.kubernetes.io/managed-by: {{ $.Release.Service }}
     app.kubernetes.io/version: {{ $.Chart.Version }}
-  name: prometheus-k8s-config
+  name: prometheus-{{ $.Release.Name }}-config
   namespace: {{ .Values.nfc_monitoring.prometheus.namespace }}
 rules:
 - apiGroups:

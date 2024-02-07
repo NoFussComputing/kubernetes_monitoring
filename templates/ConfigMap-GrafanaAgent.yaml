@@ -4,6 +4,7 @@ kind: ConfigMap
 metadata:
   labels:
     {{ toYaml $.Values.nfc_monitoring.grafana_agent.labels | nindent 4 }}
+    app.kubernetes.io/instance: {{ $.Release.Name }}
     app.kubernetes.io/managed-by: {{ $.Release.Service }}
     app.kubernetes.io/part-of: {{ $.Chart.Name }}
     app.kubernetes.io/version: {{ $.Chart.Version }}
@@ -15,7 +16,7 @@ data:
       wal_directory: /tmp/wal
 
 
-
+{{ if .Values.nfc_monitoring.loki.config }}
     logs:
       positions_directory: "/tmp"
 
@@ -234,7 +235,7 @@ data:
               - target_label: node
                 source_labels:
                   - __meta_kubernetes_pod_node_name
-
+{{ end }}
 
     integrations:
 
@@ -262,6 +263,8 @@ data:
 
   syslog_server.yaml: |
     # REF: https://grafana.com/docs/loki/latest/send-data/promtail/configuration/#example-syslog-config
+    
+{{ if .Values.nfc_monitoring.loki.config }}
     server:
       http_listen_port: 9080
       grpc_listen_port: 0
@@ -281,3 +284,5 @@ data:
         relabel_configs:
           - source_labels: ['__syslog_message_hostname']
             target_label: 'host'
+{{ end }}
+

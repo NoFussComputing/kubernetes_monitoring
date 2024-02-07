@@ -1,4 +1,4 @@
-{{ if .Values.nfc_monitoring.alert_manager.ingress.enabled | default "false" -}}
+{{ if .Values.nfc_monitoring.alert_manager.ingress.enabled -}}
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
@@ -8,11 +8,26 @@ metadata:
   annotations:
     {{ toYaml $.Values.nfc_monitoring.alert_manager.ingress.annotations | nindent 4 }}
 spec:
-  {{ toYaml $.Values.nfc_monitoring.alert_manager.ingress.spec | nindent 2 }}
+  tls:
+    - hosts:
+        - {{ .Values.nfc_monitoring.alert_manager.ingress.hostname }}
+      secretName: certificate-tls-alert-manager
+  rules:
+    - host:  {{ .Values.nfc_monitoring.alert_manager.ingress.hostname }}
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: alertmanager-{{ $.Release.Name }}
+                port:
+                  name: web
 
 {{ end }}
 
-{{ if .Values.nfc_monitoring.grafana.ingress.enabled | default "false" -}}
+{{ if .Values.nfc_monitoring.grafana.enabled -}}
+{{ if .Values.nfc_monitoring.grafana.ingress.enabled -}}
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
@@ -22,8 +37,23 @@ metadata:
   annotations:
     {{ toYaml $.Values.nfc_monitoring.grafana.ingress.annotations | nindent 4 }}
 spec:
-  {{ toYaml $.Values.nfc_monitoring.grafana.ingress.spec | nindent 2 }}
+  tls:
+    - hosts:
+        - {{ .Values.nfc_monitoring.grafana.ingress.hostname }}
+      secretName: certificate-tls-grafana
+  rules:
+    - host:  {{ .Values.nfc_monitoring.grafana.ingress.hostname }}
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: grafana
+                port:
+                  name: grafana-http
 
+{{ end }}
 {{ end }}
 
 {{ if .Values.nfc_monitoring.prometheus.ingress.enabled | default "false" -}}
@@ -36,6 +66,20 @@ metadata:
   annotations:
     {{ toYaml $.Values.nfc_monitoring.prometheus.ingress.annotations | nindent 4 }}
 spec:
-  {{ toYaml $.Values.nfc_monitoring.prometheus.ingress.spec | nindent 2 }}
+  tls:
+    - hosts:
+        - {{ .Values.nfc_monitoring.prometheus.ingress.hostname }}
+      secretName: certificate-tls-prometheus
+  rules:
+    - host:  {{ .Values.nfc_monitoring.prometheus.ingress.hostname }}
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: prometheus-{{ $.Release.Name }}
+                port:
+                  name: web
 
 {{ end }}

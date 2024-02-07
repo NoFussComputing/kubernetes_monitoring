@@ -1,8 +1,10 @@
+{{ if .Values.nfc_monitoring.prometheus.service_monitor.cadvisor }}
 ---
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
   labels:
+    app.kubernetes.io/instance: {{ $.Release.Name }}
     app.kubernetes.io/name: cadvisor
     app.kubernetes.io/component: exporter
     app.kubernetes.io/part-of: {{ $.Chart.Name }}
@@ -50,3 +52,5 @@ spec:
   selector:
     matchLabels:
       app.kubernetes.io/name: kubelet
+
+{{ end }}

@@ -1,13 +1,15 @@
+{{ if .Values.nfc_monitoring.grafana.enabled -}}
 ---
 apiVersion: monitoring.coreos.com/v1
 kind: PrometheusRule
 metadata:
   labels:
     {{ toYaml $.Values.nfc_monitoring.grafana.labels | nindent 4 }}
+    app.kubernetes.io/instance: {{ $.Release.Name }}
     app.kubernetes.io/part-of: {{ $.Chart.Name }}
     app.kubernetes.io/version: {{ $.Chart.Version }}
     app.kubernetes.io/managed-by: {{ $.Release.Service }}
-    prometheus: k8s
+    prometheus: {{ $.Release.Name }}
     role: alert-rules
   name: grafana-rules
   namespace: {{ .Values.nfc_monitoring.prometheus.namespace }}
@@ -32,3 +34,5 @@ spec:
     - expr: |
         sum by (namespace, job, handler, status_code) (rate(grafana_http_request_duration_seconds_count[5m]))
       record: namespace_job_handler_statuscode:grafana_http_request_duration_seconds_count:rate5m
+
+{{- end }}

@@ -1,9 +1,12 @@
+{{ if false }}
+# already on k3s
 ---
 apiVersion: apiregistration.k8s.io/v1
 kind: APIService
 metadata:
   labels:
     {{ toYaml $.Values.nfc_monitoring.prometheus_adaptor.labels | nindent 4 }}
+    app.kubernetes.io/instance: {{ $.Release.Name }}
     app.kubernetes.io/part-of: {{ $.Chart.Name }}
     app.kubernetes.io/managed-by: {{ $.Release.Service }}
     app.kubernetes.io/version: {{ $.Chart.Version }}
@@ -17,3 +20,4 @@ spec:
     namespace: monitoring
   version: v1beta1
   versionPriority: 100
+{{ end }}
